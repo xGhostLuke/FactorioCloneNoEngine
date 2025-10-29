@@ -6,4 +6,5 @@ public enum OreType {
     COPPER,
     IRON,
     STONE,
+    COAL,
 }

@@ -1,5 +1,9 @@
 package controller;
 
+import map.Item;
+import map.Miner;
+import map.Ore;
+
 import java.awt.*;
 import java.util.Map;
 
@@ -25,12 +29,13 @@ public class InventoryController {
 
         g2.setFont(new Font("Arial", Font.BOLD, size));
 
-        for (Map.Entry<String, Integer> entry : playerController.inventory.entrySet()) {
-            invetoryString = entry.getKey() + ": " + entry.getValue() + " \n";
+        for (Map.Entry<Ore, Integer> entry : playerController.inventory.entrySet()) {
+            invetoryString = entry.getKey().type.toString() + ": " + entry.getValue() + " \n";
             yPos += yMargin;
             g2.drawString(invetoryString, xPos, yPos);
         }
-
-
     }
+
+
+
 }

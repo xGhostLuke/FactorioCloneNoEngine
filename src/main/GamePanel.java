@@ -1,14 +1,15 @@
 package main;
 
-import controller.InventoryController;
-import controller.PlayerController;
+import controller.*;
 import entity.*;
 import map.Building;
-import controller.MapController;
+import map.Item;
+import map.Miner;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class GamePanel extends JPanel implements Runnable {
 
@@ -25,9 +26,12 @@ public class GamePanel extends JPanel implements Runnable {
 
     int fps = 60;
 
-    private final KeyHandler keyHandler = new KeyHandler();
     private final MouseHandler mouseHandler = new MouseHandler();
-    private final MapController mapGen = new MapController(this, 32);
+    private final KeyHandler keyHandler = new KeyHandler(mouseHandler);
+
+    public final OreController oreController = new OreController();
+
+    private final MapController mapGen = new MapController(this, oreController, 32);
 
     Thread gameThread;
 
@@ -104,6 +108,10 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
         player.draw(g2);
+
+        if(playerController.activeMinerInventory != null){
+            UIController.drawMinerInventory(g2, playerController.activeMinerInventory);
+        }
 
         g2.dispose();
     }

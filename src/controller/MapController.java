@@ -2,7 +2,6 @@ package controller;
 
 import main.GamePanel;
 import map.Ore;
-import map.OreType;
 import map.Tile;
 
 import javax.imageio.ImageIO;
@@ -20,13 +19,19 @@ public class MapController {
     private BufferedImage grasTileImage;
     private BufferedImage copperTileImage;
     private BufferedImage stoneTileImage;
+    private BufferedImage coalTileImage;
+
 
     private ArrayList<Tile> tileArrayList = new ArrayList<>();
 
-    public MapController(GamePanel gamePanel, int size) {
+    private OreController oreController;
+
+    public MapController(GamePanel gamePanel, OreController oreController, int size) {
         this.size = size*gamePanel.tileSize;
         this.gamePanel = gamePanel;
         this.tilesPerRow = size;
+
+        this.oreController = oreController;
 
         generateMap(this.size);
         loadTileImages();
@@ -37,6 +42,8 @@ public class MapController {
             grasTileImage = ImageIO.read(getClass().getResourceAsStream("/res/GrasTile.png"));
             copperTileImage = ImageIO.read(getClass().getResourceAsStream("/res/CopperTile.png"));
             stoneTileImage = ImageIO.read(getClass().getResourceAsStream("/res/StoneTile.png"));
+            coalTileImage = ImageIO.read(getClass().getResourceAsStream("/res/ColeTile.png"));
+
         }catch (IOException e){
             System.out.println("Error loading Images");
         }
@@ -47,15 +54,15 @@ public class MapController {
             for(int y = 0; y < size; y += gamePanel.tileSize){
                 Tile tile = new Tile (x,y);
                 tileArrayList.add(tile);
-                tile.setOreOnTile(new Ore(OreType.NONE));
+                tile.setOreOnTile(oreController.noOre);
             }
         }
 
-        generateOreCluster(new Ore(OreType.COPPER), 2);
-        generateOreCluster(new Ore(OreType.COPPER), 3);
-        generateOreCluster(new Ore(OreType.COPPER),1);
-        generateOreCluster(new Ore(OreType.STONE),2);
-        generateOreCluster(new Ore(OreType.STONE),2);
+        generateOreCluster(oreController.copperOre, 2);
+        generateOreCluster(oreController.copperOre, 3);
+        generateOreCluster(oreController.coalOre,5);
+        generateOreCluster(oreController.stoneOre,2);
+        generateOreCluster(oreController.stoneOre,2);
     }
 
     public void renderMap(Graphics2D g2){
@@ -78,6 +85,9 @@ public class MapController {
                     break;
                     case STONE:
                         g2.drawImage(stoneTileImage, x, y, null);
+                    break;
+                case COAL:
+                    g2.drawImage(coalTileImage, x, y, null);
                     break;
                 default:
                     break;

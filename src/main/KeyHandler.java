@@ -5,7 +5,13 @@ import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener {
 
+    MouseHandler mouseHandler;
+
     public boolean upPressed, downPressed, leftPressed, rightPressed, inBuildMode;
+
+    public KeyHandler(MouseHandler mouseHandler) {
+        this.mouseHandler = mouseHandler;
+    }
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -33,6 +39,9 @@ public class KeyHandler implements KeyListener {
                 inBuildMode = false;
             }else{
                 inBuildMode = true;
+                mouseHandler.leftClicked = false;
+                mouseHandler.leftPressed = false;
+                mouseHandler.rightClicked = false;
             }
             System.out.println(inBuildMode);
         }
