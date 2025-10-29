@@ -39,6 +39,8 @@ public class Miner extends Building {
             System.out.println("Miner image not found");
         }
 
+        setCraftingCost(oreController.stoneOre, 20, oreController.copperOre, 10);
+
         inventory.put(oreController.coalOre, 0);
     }
 
@@ -105,5 +107,16 @@ public class Miner extends Building {
 
     public void draw(Graphics2D g){
         g.drawImage(minerImage, xPos, yPos, null);
+    }
+
+    @Override
+    public void setCraftingCost(Item item, int cost, Item item2, int cost2) {
+        craftingCost.put(item, cost);
+        craftingCost.put(item2, cost2);
+    }
+
+    @Override
+    public Map<Item, Integer> getCraftingCost() {
+        return craftingCost;
     }
 }

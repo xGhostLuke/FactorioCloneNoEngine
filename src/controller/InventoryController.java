@@ -29,8 +29,8 @@ public class InventoryController {
 
         g2.setFont(new Font("Arial", Font.BOLD, size));
 
-        for (Map.Entry<Ore, Integer> entry : playerController.inventory.entrySet()) {
-            invetoryString = entry.getKey().type.toString() + ": " + entry.getValue() + " \n";
+        for (Map.Entry<Item, Integer> entry : playerController.inventory.entrySet()) {
+            invetoryString = entry.getKey().getName() + ": " + entry.getValue() + " \n";
             yPos += yMargin;
             g2.drawString(invetoryString, xPos, yPos);
         }

@@ -20,7 +20,7 @@ public class PlayerController {
     private long mousePressedStartTime = 0;
     private final long playerMiningDuration = 1000;
 
-    public Map<Ore, Integer> inventory = new HashMap<>();
+    public Map<Item, Integer> inventory = new HashMap<>();
 
     public Miner activeMinerInventory = null;
 
@@ -31,10 +31,10 @@ public class PlayerController {
         this.mouseHandler = mouseHandler;
         this.mapGen = mapGen;
 
-        inventory.put(oreController.coalOre, 0);
-        inventory.put(oreController.stoneOre, 0);
-        inventory.put(oreController.copperOre, 0);
-        inventory.put(oreController.ironOre, 0);
+        inventory.put(oreController.coalOre, 100);
+        inventory.put(oreController.stoneOre, 100);
+        inventory.put(oreController.copperOre, 100);
+        inventory.put(oreController.ironOre, 100);
     }
 
     public void update(){
@@ -72,9 +72,32 @@ public class PlayerController {
 
                 Building newBuilding = new Miner(this,oreController ,"miner", clickedTile.getOreOnTile(),
                                     2000, tileX* gamePanel.tileSize, tileY* gamePanel.tileSize);
-                clickedTile.setBuildingOnTile(newBuilding);
-                gamePanel.buildingList.add(newBuilding);
-                System.out.println("Miner Placed on " + clickedTile.getOreOnTile());
+
+                boolean canAfford = true;
+
+                for (Map.Entry<Item, Integer> cost : newBuilding.getCraftingCost().entrySet()) {
+                    Item item = cost.getKey();
+                    int needed = cost.getValue();
+
+                    if (!inventory.containsKey(item) || inventory.get(item) < needed) {
+                        canAfford = false;
+                        break;
+                    }
+                }
+
+                if (canAfford) {
+                    for (Map.Entry<Item, Integer> cost : newBuilding.getCraftingCost().entrySet()) {
+                        Item item = cost.getKey();
+                        int needed = cost.getValue();
+                        inventory.put(item, inventory.get(item) - needed);
+                    }
+
+                    clickedTile.setBuildingOnTile(newBuilding);
+                    gamePanel.buildingList.add(newBuilding);
+                    System.out.println("Miner placed on " + clickedTile.getOreOnTile());
+                } else {
+                    System.out.println("Not enough resources!");
+                }
             }
         }
 
