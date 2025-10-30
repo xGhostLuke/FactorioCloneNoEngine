@@ -25,8 +25,13 @@ public class UIController {
         g2.drawString("Miner Inventory", boxX + 20, boxY + 25);
 
         int lineY = boxY + 50;
-        for (Map.Entry<Item, Integer> entry : miner.getInventory().entrySet()) {
-            g2.drawString(entry.getKey().getName() + ": " + entry.getValue(), boxX + 20, lineY);
+        for (Map.Entry<Item, Integer> entry : miner.getInputInventory().entrySet()) {
+            g2.drawString("Fuel: " + entry.getKey().getName() + ": " + entry.getValue(), boxX + 20, lineY);
+            lineY += 20;
+        }
+
+        for (Map.Entry<Item, Integer> entry : miner.getOutputInventory().entrySet()) {
+            g2.drawString("Output: " + entry.getKey().getName() + ": " + entry.getValue(), boxX + 20, lineY);
             lineY += 20;
         }
 

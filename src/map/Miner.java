@@ -140,6 +140,10 @@ public class Miner extends Building {
         return outputInventory;
     }
 
+    public Map<Item, Integer> getInputInventory() {
+        return inputInventory;
+    }
+
     @Override
     public void addItemToInventory(Item item, int amount) {
         if(!inputInventory.containsKey(item)){
