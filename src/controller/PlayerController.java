@@ -5,7 +5,6 @@ import main.KeyHandler;
 import main.MouseHandler;
 import map.*;
 
-import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,10 +54,51 @@ public class PlayerController {
     }
 
     private void playerBuilding(){
-        int tileX = mouseHandler.mouseX / gamePanel.tileSize;
-        int tileY = mouseHandler.mouseY / gamePanel.tileSize;
+        int tileX = mouseHandler.mouseX / gamePanel.TILESIZE;
+        int tileY = mouseHandler.mouseY / gamePanel.TILESIZE;
 
         Tile clickedTile = mapGen.getTile(tileX, tileY);
+
+        //This is just for testing the belts and should be removes
+        if(keyHandler.placingBelt){
+            if(mouseHandler.leftClicked){
+                mouseHandler.leftClicked = false;
+
+                if(clickedTile.getBuildingOnTile() != null && keyHandler.placingBelt){
+                    System.out.println("There is already a Building on this Tile!");
+                    return;
+                }
+
+                Placeable newBuilding = new Belt(tileX, tileY, gamePanel, mapGen, "belt");
+
+                boolean canAfford = true;
+
+                for (Map.Entry<Item, Integer> cost : newBuilding.getCraftingCost().entrySet()) {
+                    Item item = cost.getKey();
+                    int needed = cost.getValue();
+
+                    if (!inventory.containsKey(item) || inventory.get(item) < needed) {
+                        canAfford = false;
+                        break;
+                    }
+                }
+
+                if (canAfford) {
+                    for (Map.Entry<Item, Integer> cost : newBuilding.getCraftingCost().entrySet()) {
+                        Item item = cost.getKey();
+                        int needed = cost.getValue();
+                        inventory.put(item, inventory.get(item) - needed);
+                    }
+
+                    clickedTile.setBuildingOnTile(newBuilding);
+                    gamePanel.buildingList.add(newBuilding);
+                    System.out.println("Belt placed on " + clickedTile.getOreOnTile());
+                } else {
+                    System.out.println("Not enough resources!");
+                }
+            }
+        }
+
 
         if (keyHandler.inBuildMode){
 
@@ -71,7 +111,7 @@ public class PlayerController {
                 }
 
                 Building newBuilding = new Miner(this,oreController ,"miner", clickedTile.getOreOnTile(),
-                                    2000, tileX* gamePanel.tileSize, tileY* gamePanel.tileSize);
+                                    2000, tileX, tileY, gamePanel);
 
                 boolean canAfford = true;
 
@@ -134,8 +174,8 @@ public class PlayerController {
     }
 
     private void playerMining(){
-        int tileX = mouseHandler.mouseX / gamePanel.tileSize;
-        int tileY = mouseHandler.mouseY / gamePanel.tileSize;
+        int tileX = mouseHandler.mouseX / gamePanel.TILESIZE;
+        int tileY = mouseHandler.mouseY / gamePanel.TILESIZE;
 
         Tile clickedTile = mapGen.getTile(tileX, tileY);
 

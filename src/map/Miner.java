@@ -2,6 +2,7 @@ package map;
 
 import controller.OreController;
 import controller.PlayerController;
+import main.GamePanel;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -12,10 +13,10 @@ import java.util.Map;
 
 public class Miner extends Building {
 
-    int xPos, yPos;
+
     Ore placedOnOre;
 
-    private BufferedImage minerImage;
+
 
     int miningAmount;
     int miningSpeed;
@@ -23,25 +24,24 @@ public class Miner extends Building {
     int oresMined = 0;
     int fuelConsumption = 3;
 
-    private Map<Item, Integer> inventory = new HashMap<Item, Integer>();
+    private Map<Item, Integer> inputInventory = new HashMap<Item, Integer>();
+    private Map<Item, Integer> outputInventory = new HashMap<Item, Integer>();
 
-    public Miner(PlayerController playerController, OreController oreController, String name, Ore placedOnOre, int mingingSpeed, int xPos, int yPos) {
-        super(playerController, oreController, name);
+    public Miner(PlayerController playerController, OreController oreController, String name, Ore placedOnOre, int mingingSpeed, int xPos, int yPos, GamePanel gamePanel) {
+        super(playerController, oreController, name, gamePanel, xPos, yPos );
         miningAmount = 1;
         this.miningSpeed = mingingSpeed;
         this.placedOnOre = placedOnOre;
-        this.xPos = xPos;
-        this.yPos = yPos;
 
         try{
-             minerImage = ImageIO.read(getClass().getResourceAsStream("/res/Drill.png"));
+             image = ImageIO.read(getClass().getResourceAsStream("/res/Drill.png"));
         }catch(IOException e){
             System.out.println("Miner image not found");
         }
 
         setCraftingCost(oreController.stoneOre, 20, oreController.copperOre, 10);
 
-        inventory.put(oreController.coalOre, 0);
+        inputInventory.put(oreController.coalOre, 0);
     }
 
     public void update(){
@@ -51,7 +51,7 @@ public class Miner extends Building {
     private void mineOre() {
         long now = System.currentTimeMillis();
 
-        if (inventory.getOrDefault(oreController.coalOre, 0) <= 0) {
+        if (inputInventory.getOrDefault(oreController.coalOre, 0) <= 0) {
             return;
         }
 
@@ -67,13 +67,13 @@ public class Miner extends Building {
 
             if (outputOre != null) {
                 System.out.println("Miner mined Ore");
-                inventory.put(outputOre, inventory.getOrDefault(outputOre, 0) + miningAmount);
+                outputInventory.put(outputOre, outputInventory.getOrDefault(outputOre, 0) + miningAmount);
                 oresMined++;
 
                 if (oresMined % fuelConsumption == 0) {
                     System.out.println("Miner used coal");
-                    int coalLeft = inventory.getOrDefault(oreController.coalOre, 0) - 1;
-                    inventory.put(oreController.coalOre, Math.max(coalLeft, 0));
+                    int coalLeft = inputInventory.getOrDefault(oreController.coalOre, 0) - 1;
+                    inputInventory.put(oreController.coalOre, Math.max(coalLeft, 0));
                 }
             }
             lastMineTime = now;
@@ -87,8 +87,8 @@ public class Miner extends Building {
             return;
         }
         System.out.println("Ore was fueling Ore");
-        inventory.put(ore, inventory.get(ore) + amount);
-        System.out.println("coal in Miner: " + inventory.get(oreController.coalOre));
+        inputInventory.put(ore, inputInventory.get(ore) + amount);
+        System.out.println("coal in Miner: " + inputInventory.get(oreController.coalOre));
     }
 
     public void takeOutput(){
@@ -96,17 +96,33 @@ public class Miner extends Building {
             return;
         }
 
-        System.out.println("Taking output: " + placedOnOre + " " + inventory.get(placedOnOre));
-        playerController.addItemToInventory(placedOnOre, inventory.get(placedOnOre));
-        inventory.put(placedOnOre, 0);
+        System.out.println("Taking output: " + placedOnOre + " " + outputInventory.get(placedOnOre));
+        playerController.addItemToInventory(placedOnOre, outputInventory.get(placedOnOre));
+        outputInventory.put(placedOnOre, 0);
+    }
+
+    public void takeItem(Item item){
+        if (!outputInventory.containsKey(item)){
+            return;
+        }
+
+        if (outputInventory.get(item) < 1){
+            return;
+        }
+
+        outputInventory.put(item, outputInventory.get(item) - 1);
     }
 
     public Map<Item, Integer> getInventory() {
-        return inventory;
+        Map<Item, Integer> out = new HashMap<Item, Integer>();
+        out.putAll(inputInventory);
+        out.putAll(outputInventory);
+        return out;
     }
 
+    @Override
     public void draw(Graphics2D g){
-        g.drawImage(minerImage, xPos, yPos, null);
+        g.drawImage(image, xPos, yPos, null);
     }
 
     @Override
@@ -118,5 +134,24 @@ public class Miner extends Building {
     @Override
     public Map<Item, Integer> getCraftingCost() {
         return craftingCost;
+    }
+
+    public Map<Item, Integer> getOutputInventory() {
+        return outputInventory;
+    }
+
+    @Override
+    public void addItemToInventory(Item item, int amount) {
+        if(!inputInventory.containsKey(item)){
+            inputInventory.put(item, amount);
+            return;
+        }
+
+        inputInventory.put(item, inputInventory.get(item) + amount);
+    }
+
+    @Override
+    public Item getOneItem() {
+        return placedOnOre;
     }
 }

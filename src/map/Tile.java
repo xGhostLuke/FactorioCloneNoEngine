@@ -6,7 +6,7 @@ public class Tile {
 
     private int x, y;
     private Ore oreOnTile;
-    private Building buildingOnTile;
+    private Placeable buildingOnTile;
 
     public Tile(int x, int y) {
         this.x = x;
@@ -37,11 +37,11 @@ public class Tile {
         this.oreOnTile = oreOnTile;
     }
 
-    public Building getBuildingOnTile() {
+    public Placeable getBuildingOnTile() {
         return buildingOnTile;
     }
 
-    public void setBuildingOnTile(Building buildingOnTile) {
+    public void setBuildingOnTile(Placeable buildingOnTile) {
         this.buildingOnTile = buildingOnTile;
     }
 

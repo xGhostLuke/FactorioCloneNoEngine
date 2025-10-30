@@ -27,7 +27,7 @@ public class MapController {
     private OreController oreController;
 
     public MapController(GamePanel gamePanel, OreController oreController, int size) {
-        this.size = size*gamePanel.tileSize;
+        this.size = size*gamePanel.TILESIZE;
         this.gamePanel = gamePanel;
         this.tilesPerRow = size;
 
@@ -50,8 +50,8 @@ public class MapController {
     }
 
     private void generateMap(int size){
-        for(int x = 0; x < size; x += gamePanel.tileSize){
-            for(int y = 0; y < size; y += gamePanel.tileSize){
+        for(int x = 0; x < size; x += gamePanel.TILESIZE){
+            for(int y = 0; y < size; y += gamePanel.TILESIZE){
                 Tile tile = new Tile (x,y);
                 tileArrayList.add(tile);
                 tile.setOreOnTile(oreController.noOre);
@@ -117,7 +117,7 @@ public class MapController {
         }
     }
 
-    public Tile getTile(int x, int y){
+    public Tile  getTile(int x, int y){
         try{
             return tileArrayList.get(x * tilesPerRow + y);
         }catch (IndexOutOfBoundsException e){

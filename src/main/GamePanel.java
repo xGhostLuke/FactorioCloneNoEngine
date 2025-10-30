@@ -3,26 +3,24 @@ package main;
 import controller.*;
 import entity.*;
 import map.Building;
-import map.Item;
-import map.Miner;
+import map.Placeable;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Map;
 
 public class GamePanel extends JPanel implements Runnable {
 
     //SCREEN SETTINGS
 
-    final int originalTileSize = 32;
-    final int scale = 1;
+    final int ORIGINALESIZE = 32;
+    final int SCLAE = 1;
+    public final int TILESIZE = ORIGINALESIZE * SCLAE;
 
-    public final int tileSize = originalTileSize * scale;
     final int maxScreenCol = 32;
     final int maxScreenRow = 32;
-    final int screenWidth = tileSize * maxScreenCol;
-    final int screenHeight = tileSize * maxScreenRow;
+    final int screenWidth = TILESIZE * maxScreenCol;
+    final int screenHeight = TILESIZE * maxScreenRow;
 
     int fps = 60;
 
@@ -39,7 +37,7 @@ public class GamePanel extends JPanel implements Runnable {
     PlayerController playerController = new PlayerController(this, keyHandler, mouseHandler, mapGen);
     InventoryController inventoryController = new InventoryController(playerController);
 
-    public ArrayList<Building> buildingList = new ArrayList<Building>();
+    public ArrayList<Placeable> buildingList = new ArrayList<Placeable>();
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -90,7 +88,7 @@ public class GamePanel extends JPanel implements Runnable {
         playerController.update();
         player.update();
 
-        for (Building building : buildingList){
+        for (Placeable building : buildingList){
             building.update();
         }
     }
@@ -103,7 +101,7 @@ public class GamePanel extends JPanel implements Runnable {
         mapGen.renderMap(g2);
         inventoryController.paintInventory(g2);
 
-        for (Building building : buildingList){
+        for (Placeable building : buildingList){
             building.draw(g2);
         }
 

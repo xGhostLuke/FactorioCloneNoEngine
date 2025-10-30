@@ -7,7 +7,7 @@ public class KeyHandler implements KeyListener {
 
     MouseHandler mouseHandler;
 
-    public boolean upPressed, downPressed, leftPressed, rightPressed, inBuildMode;
+    public boolean upPressed, downPressed, leftPressed, rightPressed, inBuildMode, placingBelt;
 
     public KeyHandler(MouseHandler mouseHandler) {
         this.mouseHandler = mouseHandler;
@@ -44,6 +44,17 @@ public class KeyHandler implements KeyListener {
                 mouseHandler.rightClicked = false;
             }
             System.out.println(inBuildMode);
+        }
+        if (code == KeyEvent.VK_R) {
+            if(placingBelt){
+                placingBelt = false;
+            }else{
+                placingBelt = true;
+                mouseHandler.leftClicked = false;
+                mouseHandler.leftPressed = false;
+                mouseHandler.rightClicked = false;
+            }
+            System.out.println("belt mode " + placingBelt);
         }
     }
 
