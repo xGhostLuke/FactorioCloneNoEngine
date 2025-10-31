@@ -49,4 +49,7 @@ public abstract  class Placeable {
     public abstract void addItemToInventory(Item item, int amount);
     public abstract Map<Item, Integer> getInventory();
 
+    public BufferedImage getImage(){
+        return image;
+    }
 }

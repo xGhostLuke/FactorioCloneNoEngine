@@ -59,85 +59,65 @@ public class PlayerController {
 
         Tile clickedTile = mapGen.getTile(tileX, tileY);
 
-        //This is just for testing the belts and should be removes
-        if(keyHandler.placingBelt){
-            if(mouseHandler.leftClicked){
+        if (keyHandler.inBuildMode) {
+            if (mouseHandler.leftClicked) {
                 mouseHandler.leftClicked = false;
 
-                if(clickedTile.getBuildingOnTile() != null && keyHandler.placingBelt){
-                    System.out.println("There is already a Building on this Tile!");
+                Class<? extends Placeable> buildingClass = UIController.getSelectedBuilding();
+                if (buildingClass == null) {
+                    System.out.println("No Building selected!");
                     return;
                 }
 
-                Placeable newBuilding = new Belt(tileX, tileY, gamePanel, mapGen, "belt");
+                clickedTile = mapGen.getTile(tileX, tileY);
+                if (clickedTile == null) return;
+
+                if (clickedTile.getBuildingOnTile() != null) {
+                    System.out.println("Already Building on Tile!");
+                    return;
+                }
+
+                Placeable newBuilding = null;
+
+                try {
+                    if (buildingClass == Miner.class) {
+                        newBuilding = new Miner(this, oreController, "Miner", clickedTile.getOreOnTile(),
+                                2000, tileX, tileY, gamePanel);
+                    } else if (buildingClass == Belt.class) {
+                        newBuilding = new Belt(tileX, tileY, gamePanel, mapGen, "Belt");
+                    } else {
+                        System.out.println("Unknown building type!");
+                        return;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return;
+                }
 
                 boolean canAfford = true;
-
                 for (Map.Entry<Item, Integer> cost : newBuilding.getCraftingCost().entrySet()) {
                     Item item = cost.getKey();
                     int needed = cost.getValue();
-
                     if (!inventory.containsKey(item) || inventory.get(item) < needed) {
                         canAfford = false;
                         break;
                     }
                 }
 
-                if (canAfford) {
-                    for (Map.Entry<Item, Integer> cost : newBuilding.getCraftingCost().entrySet()) {
-                        Item item = cost.getKey();
-                        int needed = cost.getValue();
-                        inventory.put(item, inventory.get(item) - needed);
-                    }
-
-                    clickedTile.setBuildingOnTile(newBuilding);
-                    gamePanel.buildingList.add(newBuilding);
-                    System.out.println("Belt placed on " + clickedTile.getOreOnTile());
-                } else {
+                if (!canAfford) {
                     System.out.println("Not enough resources!");
-                }
-            }
-        }
-
-
-        if (keyHandler.inBuildMode){
-
-            if(mouseHandler.leftClicked){
-                mouseHandler.leftClicked = false;
-
-                if(clickedTile.getBuildingOnTile() != null && keyHandler.inBuildMode){
-                    System.out.println("There is already a Building on this Tile!");
                     return;
                 }
-
-                Building newBuilding = new Miner(this,oreController ,"miner", clickedTile.getOreOnTile(),
-                                    2000, tileX, tileY, gamePanel);
-
-                boolean canAfford = true;
 
                 for (Map.Entry<Item, Integer> cost : newBuilding.getCraftingCost().entrySet()) {
                     Item item = cost.getKey();
                     int needed = cost.getValue();
-
-                    if (!inventory.containsKey(item) || inventory.get(item) < needed) {
-                        canAfford = false;
-                        break;
-                    }
+                    inventory.put(item, inventory.get(item) - needed);
                 }
 
-                if (canAfford) {
-                    for (Map.Entry<Item, Integer> cost : newBuilding.getCraftingCost().entrySet()) {
-                        Item item = cost.getKey();
-                        int needed = cost.getValue();
-                        inventory.put(item, inventory.get(item) - needed);
-                    }
-
-                    clickedTile.setBuildingOnTile(newBuilding);
-                    gamePanel.buildingList.add(newBuilding);
-                    System.out.println("Miner placed on " + clickedTile.getOreOnTile());
-                } else {
-                    System.out.println("Not enough resources!");
-                }
+                clickedTile.setBuildingOnTile(newBuilding);
+                gamePanel.buildingList.add(newBuilding);
+                System.out.println("Building placed " + newBuilding.getClass().getSimpleName());
             }
         }
 

@@ -3,6 +3,7 @@ package main;
 import controller.*;
 import entity.*;
 import map.Building;
+import map.BuildingPreview;
 import map.Placeable;
 
 import javax.swing.*;
@@ -36,6 +37,7 @@ public class GamePanel extends JPanel implements Runnable {
     Player player = new Player(this, keyHandler);
     PlayerController playerController = new PlayerController(this, keyHandler, mouseHandler, mapGen);
     InventoryController inventoryController = new InventoryController(playerController);
+    BuildingPreview buildingPreview = new BuildingPreview(this, keyHandler, mouseHandler);
 
     public ArrayList<Placeable> buildingList = new ArrayList<Placeable>();
 
@@ -47,6 +49,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.setFocusable(true);
         this.addMouseListener(mouseHandler);
         this.addMouseMotionListener(mouseHandler);
+        UIController.initMenu();
     }
 
     public void StartGameThread(){
@@ -85,8 +88,12 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update(){
+        UIController.update(mouseHandler);
+
         playerController.update();
         player.update();
+
+
 
         for (Placeable building : buildingList){
             building.update();
@@ -109,6 +116,18 @@ public class GamePanel extends JPanel implements Runnable {
 
         if(playerController.activeMinerInventory != null){
             UIController.drawMinerInventory(g2, playerController.activeMinerInventory);
+        }
+
+        if(keyHandler.inBuildMode){
+            UIController.drawBuildingMenu(g2);
+
+            try {
+                buildingPreview.draw(g2);
+            } catch (InstantiationException e) {
+                throw new RuntimeException(e);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         g2.dispose();

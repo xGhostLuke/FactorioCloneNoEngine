@@ -2,11 +2,22 @@ package controller;
 
 import map.Item;
 import map.Miner;
+import map.Placeable;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.BufferedImageFilter;
+import java.util.ArrayList;
 import java.util.Map;
+import main.MouseHandler;
+import map.*;
+
+import javax.imageio.ImageIO;
 
 public class UIController {
+
+    public static Class<? extends Placeable> selectedBuildingClass;
+    private static BufferedImage selectedBuildingImage;
 
     public static void drawMinerInventory(Graphics2D g2, Miner miner) {
         int boxX = 32*32 - 250;
@@ -38,5 +49,96 @@ public class UIController {
         // CloseText
         g2.setFont(new Font("Arial", Font.PLAIN, 12));
         g2.drawString("(Right click elsewhere to close)", boxX + 20, boxY + boxHeight - 10);
+    }
+
+
+    private static class BuildingButton {
+        Rectangle bounds;
+        String name;
+        BufferedImage image;
+        Class<? extends Placeable> buildingClass;
+
+        BuildingButton(String name, int x, int y, int size, BufferedImage image, Class<? extends Placeable> cls) {
+            this.bounds = new Rectangle(x, y, size, size);
+            this.name = name;
+            this.image = image;
+            this.buildingClass = cls;
+        }
+    }
+
+    private static ArrayList<BuildingButton> buildingButtons = new ArrayList<>();
+    private static BuildingButton selectedButton = null;
+
+    public static void initMenu() {
+
+        try {
+
+            BufferedImage minerImg = ImageIO.read(UIController.class.getResourceAsStream("/res/Drill.png"));
+            BufferedImage beltImg = ImageIO.read(UIController.class.getResourceAsStream("/res/belt_up.png"));
+
+            buildingButtons.add(new BuildingButton("Miner", 50, 850, 64, minerImg, Miner.class));
+            buildingButtons.add(new BuildingButton("Belt", 130, 850, 64, beltImg, Belt.class));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void update(MouseHandler mouse) {
+        if (!(mouse.mouseX > 30 && mouse.mouseX < 280 &&
+                mouse.mouseY > 830 && mouse.mouseY < 930)) {
+            return;
+        }
+
+        if (mouse.leftClicked) {
+            for (BuildingButton btn : buildingButtons) {
+                if (btn.bounds.contains(mouse.mouseX, mouse.mouseY)) {
+                    selectedButton = btn;
+                    System.out.println("Selected building: " + btn.name);
+                    setSelectedBuildingImage((BufferedImage) btn.image);
+                    setSelectedBuilding(btn.buildingClass);
+                }
+            }
+            mouse.leftClicked = false;
+        }
+    }
+
+    public static void drawBuildingMenu(Graphics2D g2) {
+        g2.setFont(new Font("Arial", Font.BOLD, 14));
+        g2.setColor(new Color(0, 0, 0, 150));
+        g2.fillRoundRect(30, 830, 250, 100, 15, 15);
+
+        for (BuildingButton btn : buildingButtons) {
+            // Rahmen
+            if (btn == selectedButton) {
+                g2.setColor(Color.YELLOW);
+            } else {
+                g2.setColor(Color.WHITE);
+            }
+            g2.drawRect(btn.bounds.x, btn.bounds.y, btn.bounds.width, btn.bounds.height);
+
+            // Bild
+            g2.drawImage(btn.image, btn.bounds.x, btn.bounds.y, btn.bounds.width, btn.bounds.height, null);
+
+            // Text
+            g2.setColor(Color.WHITE);
+            g2.drawString(btn.name, btn.bounds.x, btn.bounds.y + btn.bounds.height + 15);
+        }
+    }
+
+    public static void setSelectedBuilding(Class<? extends Placeable> buildingClass) {
+        selectedBuildingClass = buildingClass;
+    }
+
+    public static Class<? extends Placeable> getSelectedBuilding() {
+        return selectedBuildingClass;
+    }
+
+    public static BufferedImage getSelectedBuildingImage() {
+        return selectedBuildingImage;
+    }
+
+    public static void setSelectedBuildingImage(BufferedImage image) {
+        selectedBuildingImage = image;
     }
 }
