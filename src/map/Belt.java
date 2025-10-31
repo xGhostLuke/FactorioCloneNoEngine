@@ -13,8 +13,8 @@ public class Belt extends TransportationBuilding{
     private long lastTransferTime = 0;
     private final long transferDelay = 500;
 
-    public Belt(int x, int y, GamePanel gamePanel, MapController mapController, String name) {
-        super(x, y, gamePanel, mapController, name);
+    public Belt(int x, int y, GamePanel gamePanel, MapController mapController, String name, Direction direction) {
+        super(x, y, gamePanel, mapController, name, direction);
 
         try{
             image = ImageIO.read(getClass().getResourceAsStream("/res/belt_up.png"));

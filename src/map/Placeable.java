@@ -21,7 +21,9 @@ public abstract  class Placeable {
     protected int xPos, yPos;
     protected Map<Item, Integer> craftingCost = new HashMap<>();
 
-    public Placeable(int x, int y, GamePanel gamePanel, String name) {
+    protected Direction direction;
+
+    public Placeable(int x, int y, GamePanel gamePanel, String name, Direction direction) {
         this.gamePanel = gamePanel;
 
         this.xPos = x*gamePanel.TILESIZE;

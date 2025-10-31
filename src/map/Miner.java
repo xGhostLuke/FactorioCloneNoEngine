@@ -27,8 +27,8 @@ public class Miner extends Building {
     private Map<Item, Integer> inputInventory = new HashMap<Item, Integer>();
     private Map<Item, Integer> outputInventory = new HashMap<Item, Integer>();
 
-    public Miner(PlayerController playerController, OreController oreController, String name, Ore placedOnOre, int mingingSpeed, int xPos, int yPos, GamePanel gamePanel) {
-        super(playerController, oreController, name, gamePanel, xPos, yPos );
+    public Miner(PlayerController playerController, OreController oreController, String name, Ore placedOnOre, int mingingSpeed, int xPos, int yPos, GamePanel gamePanel, Direction direction) {
+        super(playerController, oreController, name, gamePanel, xPos, yPos, direction);
         miningAmount = 1;
         this.miningSpeed = mingingSpeed;
         this.placedOnOre = placedOnOre;

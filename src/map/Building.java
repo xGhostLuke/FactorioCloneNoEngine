@@ -11,8 +11,8 @@ public abstract class Building extends Placeable {
 
 
 
-    public Building(PlayerController playerController, OreController oreController, String name, GamePanel gamePanel, int x, int y) {
-        super(x, y, gamePanel, name );
+    public Building(PlayerController playerController, OreController oreController, String name, GamePanel gamePanel, int x, int y, Direction direction) {
+        super(x, y, gamePanel, name, direction);
         this.playerController = playerController;
         this.oreController = oreController;
         this.name = name;

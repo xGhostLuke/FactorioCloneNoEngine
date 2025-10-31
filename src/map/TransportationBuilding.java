@@ -14,8 +14,12 @@ public abstract class TransportationBuilding extends Placeable {
     protected MapController mapController;
 
 
-    public TransportationBuilding(int x, int y, GamePanel gamePanel, MapController mapController, String name) {
-        super(x, y, gamePanel, name);
+    public TransportationBuilding(int x, int y, GamePanel gamePanel, MapController mapController, String name, Direction direction) {
+        super(x, y, gamePanel, name, direction);
         this.mapController = mapController;
+    }
+
+    public void setDirection(Direction direction) {
+        this.direction = direction;
     }
 }
