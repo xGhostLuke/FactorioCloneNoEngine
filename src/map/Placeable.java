@@ -3,6 +3,7 @@ package map;
 import controller.OreController;
 import controller.PlayerController;
 import main.GamePanel;
+import main.ImageLoader;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -28,6 +29,11 @@ public abstract  class Placeable {
 
         this.xPos = x*gamePanel.TILESIZE;
         this.yPos = y*gamePanel.TILESIZE;
+
+        this.name = name;
+        this.direction = direction;
+
+        this.image = ImageLoader.getImageWithRotation(this.name, this.direction);
     }
 
     public abstract void update();

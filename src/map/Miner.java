@@ -33,12 +33,6 @@ public class Miner extends Building {
         this.miningSpeed = mingingSpeed;
         this.placedOnOre = placedOnOre;
 
-        try{
-             image = ImageIO.read(getClass().getResourceAsStream("/res/Drill.png"));
-        }catch(IOException e){
-            System.out.println("Miner image not found");
-        }
-
         setCraftingCost(oreController.stoneOre, 20, oreController.copperOre, 10);
 
         inputInventory.put(oreController.coalOre, 0);
@@ -92,13 +86,15 @@ public class Miner extends Building {
     }
 
     public void takeOutput(){
-        if(oresMined == 0){
+        Item item = getOneItem();
+
+        if (outputInventory.isEmpty()){
             return;
         }
 
-        System.out.println("Taking output: " + placedOnOre + " " + outputInventory.get(placedOnOre));
-        playerController.addItemToInventory(placedOnOre, outputInventory.get(placedOnOre));
-        outputInventory.put(placedOnOre, 0);
+        playerController.addItemToInventory(item, outputInventory.get(item));
+        System.out.println("Taking output: " + item  + " " + outputInventory.get(item));
+        outputInventory.put(item, 0);
     }
 
     public void takeItem(Item item){
@@ -146,16 +142,38 @@ public class Miner extends Building {
 
     @Override
     public void addItemToInventory(Item item, int amount) {
-        if(!inputInventory.containsKey(item)){
-            inputInventory.put(item, amount);
+
+        if(item.isFuel){
+            if(!inputInventory.containsKey(item)){
+                inputInventory.put(item, amount);
+                return;
+            }
+
+            inputInventory.put(item, inputInventory.get(item) + amount);
             return;
         }
 
-        inputInventory.put(item, inputInventory.get(item) + amount);
+        if(!outputInventory.containsKey(item)){
+            outputInventory.put(item, amount);
+            return;
+        }
+
+        outputInventory.put(item, outputInventory.get(item) + amount);
+
+
     }
 
+
+    //if the miner isnt placed on any ore you cant take the output if it got some through transportation
     @Override
     public Item getOneItem() {
-        return placedOnOre;
+        if (placedOnOre.type != OreType.NONE){
+            return placedOnOre;
+        }
+
+        if (outputInventory.isEmpty()){
+            return null;
+        }
+            return outputInventory.entrySet().iterator().next().getKey();
     }
 }

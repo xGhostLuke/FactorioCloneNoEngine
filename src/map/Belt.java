@@ -15,12 +15,6 @@ public class Belt extends TransportationBuilding{
 
     public Belt(int x, int y, GamePanel gamePanel, MapController mapController, String name, Direction direction) {
         super(x, y, gamePanel, mapController, name, direction);
-
-        try{
-            image = ImageIO.read(getClass().getResourceAsStream("/res/belt_up.png"));
-        }catch(IOException e){
-            System.out.println("Image image not found");
-        }
     }
 
     @Override
@@ -89,9 +83,28 @@ public class Belt extends TransportationBuilding{
     /**
      * Checks if there is a building on top. For now
      */
-    private void setBuildingAddingTo(){
-        int tileX = xPos / gamePanel.TILESIZE;
-        int tileY = yPos / gamePanel.TILESIZE + 1;
+    protected void setBuildingAddingTo(){
+        int tileX;
+        int tileY;
+
+        switch (direction){
+            case Direction.TOP:
+                tileX = xPos / gamePanel.TILESIZE;
+                tileY = yPos / gamePanel.TILESIZE - 1;
+                break;
+            case Direction.RIGHT:
+                tileX = xPos / gamePanel.TILESIZE + 1;
+                tileY = yPos / gamePanel.TILESIZE;
+                break;
+            case Direction.LEFT:
+                tileX = xPos / gamePanel.TILESIZE - 1;
+                tileY = yPos / gamePanel.TILESIZE;
+                break;
+            default:
+                tileX = xPos / gamePanel.TILESIZE;
+                tileY = yPos / gamePanel.TILESIZE + 1;
+                break;
+        }
 
         Tile tile = mapController.getTile(tileX, tileY);
         if (tile == null) return;
@@ -102,9 +115,28 @@ public class Belt extends TransportationBuilding{
     /**
      * Checks if a Building is Placed under the claw for now
      */
-    private void setBuildingTakingFrom(){
-        int tileX = xPos / gamePanel.TILESIZE;
-        int tileY = yPos / gamePanel.TILESIZE - 1; // eine Tile oberhalb
+    protected void setBuildingTakingFrom(){
+        int tileX;
+        int tileY;
+
+        switch (direction){
+            case Direction.TOP:
+                tileX = xPos / gamePanel.TILESIZE;
+                tileY = yPos / gamePanel.TILESIZE + 1;
+                break;
+            case Direction.RIGHT:
+                tileX = xPos / gamePanel.TILESIZE - 1;
+                tileY = yPos / gamePanel.TILESIZE;
+                break;
+            case Direction.LEFT:
+                tileX = xPos / gamePanel.TILESIZE + 1;
+                tileY = yPos / gamePanel.TILESIZE;
+                break;
+            default:
+                tileX = xPos / gamePanel.TILESIZE;
+                tileY = yPos / gamePanel.TILESIZE - 1;
+                break;
+        }
 
         Tile tile = mapController.getTile(tileX, tileY);
         if (tile == null) return;
@@ -117,12 +149,8 @@ public class Belt extends TransportationBuilding{
      * Takes one Item per Tick and adds one to the other
      */
     public void takeItemFromBuilding(){
-        if(buildingRemovingFrom == null){
-            return;
-        }
 
-        Item itemToAddToOwnInv = buildingRemovingFrom.getOneItem();
-        if(itemToAddToOwnInv == null){
+        if(buildingRemovingFrom == null){
             return;
         }
 
@@ -131,8 +159,14 @@ public class Belt extends TransportationBuilding{
             return;
         }
 
+        Item itemToAddToOwnInv = buildingRemovingFrom.getOneItem();
+        System.out.println(itemToAddToOwnInv);
+        if(itemToAddToOwnInv == null){
+            return;
+        }
+
         Integer amount = sourceInv.get(itemToAddToOwnInv);
-        if(amount == null || buildingRemovingFrom.getInventory().get(itemToAddToOwnInv) < 2){
+        if(amount == null || buildingRemovingFrom.getInventory().get(itemToAddToOwnInv) < 1){
             return;
         }
 

@@ -8,6 +8,7 @@ import map.Placeable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.font.ImageGraphicAttribute;
 import java.util.ArrayList;
 
 public class GamePanel extends JPanel implements Runnable {
@@ -49,6 +50,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.setFocusable(true);
         this.addMouseListener(mouseHandler);
         this.addMouseMotionListener(mouseHandler);
+        ImageLoader.loadAll();
         UIController.initMenu();
     }
 

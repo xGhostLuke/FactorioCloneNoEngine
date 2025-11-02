@@ -22,4 +22,11 @@ public abstract class TransportationBuilding extends Placeable {
     public void setDirection(Direction direction) {
         this.direction = direction;
     }
+
+    protected abstract void setBuildingAddingTo();
+    protected abstract void setBuildingTakingFrom();
+
+    public abstract void takeItemFromBuilding();
+    public abstract void giveItemToBuilding();
+
 }

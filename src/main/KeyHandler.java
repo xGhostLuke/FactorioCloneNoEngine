@@ -1,5 +1,7 @@
 package main;
 
+import map.Direction;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -8,6 +10,8 @@ public class KeyHandler implements KeyListener {
     MouseHandler mouseHandler;
 
     public boolean upPressed, downPressed, leftPressed, rightPressed, inBuildMode, rotationPressed;
+
+    private Direction dir = Direction.TOP;
 
     public KeyHandler(MouseHandler mouseHandler) {
         this.mouseHandler = mouseHandler;
@@ -46,8 +50,15 @@ public class KeyHandler implements KeyListener {
             System.out.println(inBuildMode);
         }
         if (code == KeyEvent.VK_R) {
-            rightPressed = true;
-            System.out.println(rotationPressed);
+            if (!inBuildMode) {
+                return;
+            }
+
+            int index = dir.ordinal();
+
+            dir = Direction.values()[(index + 1) % Direction.values().length];
+
+            System.out.println(dir.name().toLowerCase());
         }
     }
 
@@ -67,5 +78,9 @@ public class KeyHandler implements KeyListener {
         if (code == KeyEvent.VK_D) {
             rightPressed = false;
         }
+    }
+
+    public Direction getDirection(){
+        return dir;
     }
 }

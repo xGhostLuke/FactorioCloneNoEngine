@@ -30,10 +30,10 @@ public class PlayerController {
         this.mouseHandler = mouseHandler;
         this.mapGen = mapGen;
 
-        inventory.put(oreController.coalOre, 100);
-        inventory.put(oreController.stoneOre, 100);
-        inventory.put(oreController.copperOre, 100);
-        inventory.put(oreController.ironOre, 100);
+        inventory.put(oreController.coalOre, 1000);
+        inventory.put(oreController.stoneOre, 1000);
+        inventory.put(oreController.copperOre, 1000);
+        inventory.put(oreController.ironOre, 1000);
     }
 
     public void update(){
@@ -41,16 +41,16 @@ public class PlayerController {
         playerBuilding();
     }
 
-    public void addItemToInventory(Ore ore, int amount){
-        if(inventory.containsKey(ore)){
-            inventory.put(ore, inventory.get(ore) + amount);
-            System.out.println(ore.type.toString() + " increased by " + amount);
+    public void addItemToInventory(Item item, int amount){
+        if(inventory.containsKey(item)){
+            inventory.put(item, inventory.get(item) + amount);
+            System.out.println(item.getType().toString() + " increased by " + amount);
             return;
         }
-        inventory.put(ore, amount);
+        inventory.put(item, amount);
 
-        System.out.println(ore.type.toString() + " added to the inventory");
-        System.out.println(inventory.get(ore) + " now in inventory");
+        System.out.println(item.getType().toString() + " added to the inventory");
+        System.out.println(inventory.get(item) + " now in inventory");
     }
 
     private void playerBuilding(){
@@ -78,13 +78,13 @@ public class PlayerController {
                 }
 
                 Placeable newBuilding = null;
-
+                System.out.println(clickedTile.getOreOnTile().getType().name());
                 try {
                     if (buildingClass == Miner.class) {
-                        newBuilding = new Miner(this, oreController, "Miner", clickedTile.getOreOnTile(),
-                                2000, tileX, tileY, gamePanel, Direction.TOPDOWN);
+                        newBuilding = new Miner(this, oreController, "miner", clickedTile.getOreOnTile(),
+                                2000, tileX, tileY, gamePanel, keyHandler.getDirection());
                     } else if (buildingClass == Belt.class) {
-                        newBuilding = new Belt(tileX, tileY, gamePanel, mapGen, "Belt", Direction.TOPDOWN);
+                        newBuilding = new Belt(tileX, tileY, gamePanel, mapGen, "belt", keyHandler.getDirection());
                     } else {
                         System.out.println("Unknown building type!");
                         return;

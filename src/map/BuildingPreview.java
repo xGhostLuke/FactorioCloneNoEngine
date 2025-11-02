@@ -30,7 +30,7 @@ public class BuildingPreview {
             int tileX = (mouseHandler.mouseX / gamePanel.TILESIZE) * gamePanel.TILESIZE;
             int tileY = (mouseHandler.mouseY / gamePanel.TILESIZE) * gamePanel.TILESIZE;
 
-            BufferedImage previewImage = UIController.getSelectedBuildingImage();
+            BufferedImage previewImage = UIController.getSelectedBuildingImage(keyHandler.getDirection());
             if (previewImage != null) {
                 // Halbe Transparenz
                 AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f);

@@ -2,7 +2,7 @@ package map;
 
 public class Ore extends Item{
 
-    public OreType type;
+
 
     public Ore(String name, OreType type, boolean isFuel){
         super(name);

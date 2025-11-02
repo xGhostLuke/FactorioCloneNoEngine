@@ -1,5 +1,6 @@
 package controller;
 
+import main.ImageLoader;
 import map.Item;
 import map.Miner;
 import map.Placeable;
@@ -73,11 +74,11 @@ public class UIController {
 
         try {
 
-            BufferedImage minerImg = ImageIO.read(UIController.class.getResourceAsStream("/res/Drill.png"));
-            BufferedImage beltImg = ImageIO.read(UIController.class.getResourceAsStream("/res/belt_up.png"));
+            BufferedImage minerImg = ImageLoader.getImage("miner");
+            BufferedImage beltImg = ImageLoader.getImage("belt_top");
 
-            buildingButtons.add(new BuildingButton("Miner", 50, 850, 64, minerImg, Miner.class));
-            buildingButtons.add(new BuildingButton("Belt", 130, 850, 64, beltImg, Belt.class));
+            buildingButtons.add(new BuildingButton("miner", 50, 850, 64, minerImg, Miner.class));
+            buildingButtons.add(new BuildingButton("belt", 130, 850, 64, beltImg, Belt.class));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -134,8 +135,9 @@ public class UIController {
         return selectedBuildingClass;
     }
 
-    public static BufferedImage getSelectedBuildingImage() {
-        return selectedBuildingImage;
+    public static BufferedImage getSelectedBuildingImage(Direction dir) {
+        //System.out.println(selectedButton.name + "_"+ dir.name().toLowerCase());
+        return ImageLoader.getImage(selectedButton.name + "_"+ dir.name().toLowerCase());
     }
 
     public static void setSelectedBuildingImage(BufferedImage image) {

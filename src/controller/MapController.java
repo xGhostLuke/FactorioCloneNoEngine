@@ -76,7 +76,7 @@ public class MapController {
             int x = tile.getX();
             int y = tile.getY();
 
-            switch (ore.type){
+            switch (ore.getType()){
                 case NONE:
                     g2.drawImage(grasTileImage, x, y, null);
                     break;
