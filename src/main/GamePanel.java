@@ -2,13 +2,11 @@ package main;
 
 import controller.*;
 import entity.*;
-import map.Building;
-import map.BuildingPreview;
-import map.Placeable;
+import map.buildings.BuildingPreview;
+import map.buildings.Placeable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.font.ImageGraphicAttribute;
 import java.util.ArrayList;
 
 public class GamePanel extends JPanel implements Runnable {

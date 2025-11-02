@@ -1,4 +1,4 @@
-package map;
+package map.items;
 
 public class Ore extends Item{
 

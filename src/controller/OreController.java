@@ -1,7 +1,7 @@
 package controller;
 
-import map.Ore;
-import map.OreType;
+import map.items.Ore;
+import map.items.OreType;
 
 public class OreController {
 

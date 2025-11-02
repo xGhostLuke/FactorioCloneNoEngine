@@ -1,6 +1,6 @@
 package main;
 
-import map.Direction;
+import map.buildings.Direction;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;

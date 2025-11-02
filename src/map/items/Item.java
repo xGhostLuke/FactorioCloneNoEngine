@@ -1,4 +1,4 @@
-package map;
+package map.items;
 
 public class Item {
 
@@ -15,4 +15,7 @@ public class Item {
         return name;
     }
     public OreType getType(){return type;}
+    public boolean getIsFuel(){
+        return isFuel;
+    }
 }

@@ -1,6 +1,6 @@
-package map;
+package map.items;
 
-import main.*;
+import map.buildings.Placeable;
 
 public class Tile {
 

@@ -1,7 +1,8 @@
-package map;
+package map.buildings;
 
 import controller.MapController;
 import main.GamePanel;
+import map.items.Item;
 
 import java.util.HashMap;
 import java.util.Map;

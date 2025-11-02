@@ -1,11 +1,11 @@
-package map;
+package map.buildings;
 
 import controller.MapController;
 import main.GamePanel;
+import map.items.Item;
+import map.items.Tile;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.io.IOException;
 import java.util.Map;
 
 public class Belt extends TransportationBuilding{

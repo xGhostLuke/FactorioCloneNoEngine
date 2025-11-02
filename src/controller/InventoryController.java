@@ -1,8 +1,6 @@
 package controller;
 
-import map.Item;
-import map.Miner;
-import map.Ore;
+import map.items.Item;
 
 import java.awt.*;
 import java.util.Map;

@@ -1,31 +1,26 @@
-package map;
+package map.buildings;
 
 import controller.OreController;
 import controller.PlayerController;
 import main.GamePanel;
+import map.items.Item;
+import map.items.Ore;
+import map.items.OreType;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Miner extends Building {
 
-
     Ore placedOnOre;
-
-
-
     int miningAmount;
     int miningSpeed;
     private long lastMineTime = 0;
     int oresMined = 0;
     int fuelConsumption = 3;
 
-    private Map<Item, Integer> inputInventory = new HashMap<Item, Integer>();
-    private Map<Item, Integer> outputInventory = new HashMap<Item, Integer>();
+
 
     public Miner(PlayerController playerController, OreController oreController, String name, Ore placedOnOre, int mingingSpeed, int xPos, int yPos, GamePanel gamePanel, Direction direction) {
         super(playerController, oreController, name, gamePanel, xPos, yPos, direction);
@@ -50,7 +45,7 @@ public class Miner extends Building {
         }
 
         if (now - lastMineTime >= miningSpeed) {
-            OreType type = placedOnOre.type;
+            OreType type = placedOnOre.getType();
             Ore outputOre = switch (type) {
                 case COPPER -> oreController.copperOre;
                 case STONE -> oreController.stoneOre;
@@ -76,7 +71,7 @@ public class Miner extends Building {
 
 
     public void addFuel(Ore ore, int amount){
-        if(!ore.isFuel){
+        if(!ore.getIsFuel()){
             System.out.println("Ore wasnt fueling Ore");
             return;
         }
@@ -143,7 +138,7 @@ public class Miner extends Building {
     @Override
     public void addItemToInventory(Item item, int amount) {
 
-        if(item.isFuel){
+        if(item.getIsFuel()){
             if(!inputInventory.containsKey(item)){
                 inputInventory.put(item, amount);
                 return;
@@ -167,7 +162,7 @@ public class Miner extends Building {
     //if the miner isnt placed on any ore you cant take the output if it got some through transportation
     @Override
     public Item getOneItem() {
-        if (placedOnOre.type != OreType.NONE){
+        if (placedOnOre.getType() != OreType.NONE){
             return placedOnOre;
         }
 

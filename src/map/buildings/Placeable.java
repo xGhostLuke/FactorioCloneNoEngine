@@ -1,9 +1,10 @@
-package map;
+package map.buildings;
 
 import controller.OreController;
 import controller.PlayerController;
 import main.GamePanel;
 import main.ImageLoader;
+import map.items.Item;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

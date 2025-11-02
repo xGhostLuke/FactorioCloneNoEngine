@@ -3,7 +3,11 @@ package controller;
 import main.GamePanel;
 import main.KeyHandler;
 import main.MouseHandler;
-import map.*;
+import map.buildings.Belt;
+import map.buildings.Miner;
+import map.buildings.Placeable;
+import map.items.Item;
+import map.items.Tile;
 
 import java.util.HashMap;
 import java.util.Map;

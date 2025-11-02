@@ -1,19 +1,17 @@
 package controller;
 
 import main.ImageLoader;
-import map.Item;
-import map.Miner;
-import map.Placeable;
+import map.buildings.Direction;
+import map.items.Item;
+import map.buildings.Belt;
+import map.buildings.Miner;
+import map.buildings.Placeable;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.BufferedImageFilter;
 import java.util.ArrayList;
 import java.util.Map;
 import main.MouseHandler;
-import map.*;
-
-import javax.imageio.ImageIO;
 
 public class UIController {
 

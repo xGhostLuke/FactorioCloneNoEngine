@@ -1,4 +1,4 @@
-package map;
+package map.buildings;
 
 /**
  * enum to give the direction that items on transportation building are FLOWING TO

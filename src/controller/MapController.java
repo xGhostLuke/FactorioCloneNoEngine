@@ -1,8 +1,8 @@
 package controller;
 
 import main.GamePanel;
-import map.Ore;
-import map.Tile;
+import map.items.Ore;
+import map.items.Tile;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

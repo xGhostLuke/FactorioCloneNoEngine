@@ -1,7 +1,6 @@
-package map;
+package map.buildings;
 
 import controller.UIController;
-import main.GameObject;
 import main.GamePanel;
 import main.KeyHandler;
 import main.MouseHandler;
