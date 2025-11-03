@@ -3,9 +3,8 @@ package controller;
 import main.GamePanel;
 import main.KeyHandler;
 import main.MouseHandler;
-import map.buildings.Belt;
-import map.buildings.Miner;
-import map.buildings.Placeable;
+import main.ItemMananger;
+import map.buildings.*;
 import map.items.Item;
 import map.items.Tile;
 
@@ -15,7 +14,6 @@ import java.util.Map;
 public class PlayerController {
 
     private final GamePanel gamePanel;
-    private final OreController oreController;
     private final MapController mapGen;
     private final MouseHandler mouseHandler;
     private final KeyHandler keyHandler;
@@ -25,19 +23,18 @@ public class PlayerController {
 
     public Map<Item, Integer> inventory = new HashMap<>();
 
-    public Miner activeMinerInventory = null;
+    public Building activeInventory = null;
 
     public PlayerController(GamePanel gamePanel, KeyHandler keyHandler, MouseHandler mouseHandler, MapController mapGen) {
         this.gamePanel = gamePanel;
-        this.oreController = gamePanel.oreController;
         this.keyHandler = keyHandler;
         this.mouseHandler = mouseHandler;
         this.mapGen = mapGen;
 
-        inventory.put(oreController.coalOre, 1000);
-        inventory.put(oreController.stoneOre, 1000);
-        inventory.put(oreController.copperOre, 1000);
-        inventory.put(oreController.ironOre, 1000);
+        inventory.put(ItemMananger.coalOre, 1000);
+        inventory.put(ItemMananger.stoneOre, 1000);
+        inventory.put(ItemMananger.copperOre, 1000);
+        inventory.put(ItemMananger.ironOre, 1000);
     }
 
     public void update(){
@@ -85,11 +82,14 @@ public class PlayerController {
                 System.out.println(clickedTile.getOreOnTile().getType().name());
                 try {
                     if (buildingClass == Miner.class) {
-                        newBuilding = new Miner(this, oreController, "miner", clickedTile.getOreOnTile(),
+                        newBuilding = new Miner(this, "miner", clickedTile.getOreOnTile(),
                                 2000, tileX, tileY, gamePanel, keyHandler.getDirection());
                     } else if (buildingClass == Belt.class) {
                         newBuilding = new Belt(tileX, tileY, gamePanel, mapGen, "belt", keyHandler.getDirection());
-                    } else {
+                    } else if(buildingClass == Furnace.class){
+                        newBuilding = new Furnace(this, "furnace", gamePanel, tileX, tileY, keyHandler.getDirection(), 5000);
+                    }
+                    else {
                         System.out.println("Unknown building type!");
                         return;
                     }
@@ -127,7 +127,7 @@ public class PlayerController {
 
         if(mouseHandler.rightClicked){
             if(clickedTile.getBuildingOnTile() instanceof Miner miner){
-                if(activeMinerInventory == miner){
+                if(activeInventory == miner){
                     miner.takeOutput();
                 }
                 System.out.println("Opened Miner Inventory");
@@ -136,23 +136,37 @@ public class PlayerController {
 
         if(mouseHandler.rightClicked){
             if(clickedTile.getBuildingOnTile() instanceof Miner miner){
-                activeMinerInventory = miner;
+                activeInventory = miner;
+                System.out.println("Opened Miner Inventory");
+            }
+            if(clickedTile.getBuildingOnTile() instanceof Furnace furnace){
+                activeInventory = furnace;
                 System.out.println("Opened Miner Inventory");
             }
             if(clickedTile.getBuildingOnTile() == null){
-                activeMinerInventory = null;
+                activeInventory = null;
             }
 
             mouseHandler.rightClicked = false;
             return;
         }
 
-        if(mouseHandler.leftClicked && clickedTile.getBuildingOnTile() instanceof Miner miner){
-            if (inventory.get(oreController.coalOre) > 0){
-                miner.addFuel(oreController.coalOre, 1);
-                inventory.put(oreController.coalOre, inventory.get(oreController.coalOre) - 1);
-                mouseHandler.leftClicked = false;
-                return;
+        if(mouseHandler.leftClicked ){
+            if(clickedTile.getBuildingOnTile() instanceof Miner miner){
+                if (inventory.get(ItemMananger.coalOre) > 0){
+                    miner.addFuel(ItemMananger.coalOre, 1);
+                    inventory.put(ItemMananger.coalOre, inventory.get(ItemMananger.coalOre) - 1);
+                    mouseHandler.leftClicked = false;
+                    return;
+                }
+            }
+            if(clickedTile.getBuildingOnTile() instanceof Furnace furnace){
+                if (inventory.get(ItemMananger.coalOre) > 0){
+                    furnace.addFuel(ItemMananger.coalOre, 1);
+                    inventory.put(ItemMananger.coalOre, inventory.get(ItemMananger.coalOre) - 1);
+                    mouseHandler.leftClicked = false;
+                    return;
+                }
             }
         }
     }

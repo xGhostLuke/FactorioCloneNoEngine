@@ -68,16 +68,8 @@ public class Belt extends TransportationBuilding{
     }
 
     @Override
-    public void takeItem(Item item) {
-        if (!inventory.containsKey(item)){
-            return;
-        }
+    public void takeItem(Item item, int amount) {
 
-        if (inventory.get(item) < 1){
-            return;
-        }
-
-        inventory.put(item, inventory.get(item) - 1);
     }
 
     /**
@@ -165,13 +157,15 @@ public class Belt extends TransportationBuilding{
             return;
         }
 
-        Integer amount = sourceInv.get(itemToAddToOwnInv);
-        if(amount == null || buildingRemovingFrom.getInventory().get(itemToAddToOwnInv) < 1){
+        int amount = 1;
+
+        Integer currenAmount = sourceInv.get(itemToAddToOwnInv);
+        if(currenAmount == null || buildingRemovingFrom.getInventory().get(itemToAddToOwnInv) < amount){
             return;
         }
 
-        addItemToInventory(itemToAddToOwnInv, 1);
-        buildingRemovingFrom.takeItem(itemToAddToOwnInv);
+        addItemToInventory(itemToAddToOwnInv, amount);
+        buildingRemovingFrom.takeItem(itemToAddToOwnInv, amount);
     }
 
     @Override
@@ -183,6 +177,10 @@ public class Belt extends TransportationBuilding{
     public void addItemToInventory(Item item, int amount) {
         if(!inventory.containsKey(item)){
             inventory.put(item, amount);
+            return;
+        }
+
+        if(buildingRemovingFrom == null){
             return;
         }
 

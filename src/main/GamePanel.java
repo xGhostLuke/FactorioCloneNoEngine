@@ -24,23 +24,25 @@ public class GamePanel extends JPanel implements Runnable {
 
     int fps = 60;
 
-    private final MouseHandler mouseHandler = new MouseHandler();
-    private final KeyHandler keyHandler = new KeyHandler(mouseHandler);
+    private final MouseHandler mouseHandler;
+    private final KeyHandler keyHandler;
 
-    public final OreController oreController = new OreController();
 
-    private final MapController mapGen = new MapController(this, oreController, 32);
+    private final MapController mapGen;
 
     Thread gameThread;
 
-    Player player = new Player(this, keyHandler);
-    PlayerController playerController = new PlayerController(this, keyHandler, mouseHandler, mapGen);
-    InventoryController inventoryController = new InventoryController(playerController);
-    BuildingPreview buildingPreview = new BuildingPreview(this, keyHandler, mouseHandler);
+    Player player;
+    PlayerController playerController;
+    InventoryController inventoryController;
+    BuildingPreview buildingPreview;
 
     public ArrayList<Placeable> buildingList = new ArrayList<Placeable>();
 
     public GamePanel() {
+        mouseHandler = new MouseHandler();
+        keyHandler = new KeyHandler(mouseHandler);
+
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.BLACK);
         this.setDoubleBuffered(true);
@@ -48,8 +50,17 @@ public class GamePanel extends JPanel implements Runnable {
         this.setFocusable(true);
         this.addMouseListener(mouseHandler);
         this.addMouseMotionListener(mouseHandler);
+
         ImageLoader.loadAll();
         UIController.initMenu();
+
+        mapGen = new MapController(this, 32);
+
+        player = new Player(this, keyHandler);
+        playerController = new PlayerController(this, keyHandler, mouseHandler, mapGen);
+        inventoryController = new InventoryController(playerController);
+        buildingPreview = new BuildingPreview(this, keyHandler, mouseHandler);
+
     }
 
     public void StartGameThread(){
@@ -114,8 +125,8 @@ public class GamePanel extends JPanel implements Runnable {
 
         player.draw(g2);
 
-        if(playerController.activeMinerInventory != null){
-            UIController.drawMinerInventory(g2, playerController.activeMinerInventory);
+        if(playerController.activeInventory != null){
+            UIController.drawMinerInventory(g2, playerController.activeInventory);
         }
 
         if(keyHandler.inBuildMode){

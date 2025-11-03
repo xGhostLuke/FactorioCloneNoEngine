@@ -1,6 +1,6 @@
 package map.buildings;
 
-import controller.OreController;
+import main.ItemMananger;
 import controller.PlayerController;
 import main.GamePanel;
 import main.ImageLoader;
@@ -13,7 +13,7 @@ import java.util.Map;
 
 public abstract  class Placeable {
 
-    protected OreController oreController;
+    protected ItemMananger itemMananger;
     protected PlayerController playerController;
     protected GamePanel gamePanel;
 
@@ -54,11 +54,16 @@ public abstract  class Placeable {
      * Should remove Item from Inventory
      * @param item Item to take
      */
-    public abstract void takeItem(Item item);
+    public abstract void takeItem(Item item, int amount);
     public abstract void addItemToInventory(Item item, int amount);
     public abstract Map<Item, Integer> getInventory();
 
     public BufferedImage getImage(){
         return image;
     }
+
+    public String getName() {
+        return name;
+    }
+
 }

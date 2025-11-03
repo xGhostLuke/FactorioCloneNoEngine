@@ -1,11 +1,8 @@
 package controller;
 
 import main.ImageLoader;
-import map.buildings.Direction;
+import map.buildings.*;
 import map.items.Item;
-import map.buildings.Belt;
-import map.buildings.Miner;
-import map.buildings.Placeable;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -18,11 +15,11 @@ public class UIController {
     public static Class<? extends Placeable> selectedBuildingClass;
     private static BufferedImage selectedBuildingImage;
 
-    public static void drawMinerInventory(Graphics2D g2, Miner miner) {
+    public static void drawMinerInventory(Graphics2D g2, Building building) {
         int boxX = 32*32 - 250;
         int boxY = 50;
-        int boxWidth = 200;
-        int boxHeight = 100;
+        int boxWidth = 250;
+        int boxHeight = 200;
 
         //Background
         g2.setColor(new Color(0, 0, 0, 180));
@@ -32,17 +29,19 @@ public class UIController {
         g2.drawRoundRect(boxX, boxY, boxWidth, boxHeight, 15, 15);
 
         g2.setFont(new Font("Arial", Font.BOLD, 16));
-        g2.drawString("Miner Inventory", boxX + 20, boxY + 25);
+        g2.drawString(building.getName(), boxX + 20, boxY + 25);
 
         int lineY = boxY + 50;
-        for (Map.Entry<Item, Integer> entry : miner.getInputInventory().entrySet()) {
-            g2.drawString("Fuel: " + entry.getKey().getName() + ": " + entry.getValue(), boxX + 20, lineY);
+        for (Map.Entry<Item, Integer> entry : building.getInputInventory().entrySet()) {
+            g2.drawString("Input: " + entry.getKey().getName() + ": " + entry.getValue(), boxX + 20, lineY);
             lineY += 20;
         }
 
-        for (Map.Entry<Item, Integer> entry : miner.getOutputInventory().entrySet()) {
-            g2.drawString("Output: " + entry.getKey().getName() + ": " + entry.getValue(), boxX + 20, lineY);
-            lineY += 20;
+        for (Map.Entry<Item, Integer> entry : building.getOutputInventory().entrySet()) {
+            if (entry.getValue() > 0){
+                g2.drawString("Output: " + entry.getKey().getName() + ": " + entry.getValue(), boxX + 20, lineY);
+                lineY += 20;
+            }
         }
 
         // CloseText
@@ -74,9 +73,11 @@ public class UIController {
 
             BufferedImage minerImg = ImageLoader.getImage("miner");
             BufferedImage beltImg = ImageLoader.getImage("belt_top");
+            BufferedImage furnanceImage = ImageLoader.getImage("furnace");
 
             buildingButtons.add(new BuildingButton("miner", 50, 850, 64, minerImg, Miner.class));
             buildingButtons.add(new BuildingButton("belt", 130, 850, 64, beltImg, Belt.class));
+            buildingButtons.add(new BuildingButton("furnace", 210, 850, 64, furnanceImage, Furnace.class));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -105,7 +106,7 @@ public class UIController {
     public static void drawBuildingMenu(Graphics2D g2) {
         g2.setFont(new Font("Arial", Font.BOLD, 14));
         g2.setColor(new Color(0, 0, 0, 150));
-        g2.fillRoundRect(30, 830, 250, 100, 15, 15);
+        g2.fillRoundRect(30, 830, 300, 100, 15, 15);
 
         for (BuildingButton btn : buildingButtons) {
             // Rahmen

@@ -32,6 +32,9 @@ public class ImageLoader {
             images.put("belt", load("/res/belt_top.png"));
             loadRotations("belt");
 
+            images.put("furnace", load("/res/Furnace.png"));
+            loadRotations("furnace");
+
         }catch (IOException e){
             System.out.println("EEEE");
             System.out.println("Error loading images");

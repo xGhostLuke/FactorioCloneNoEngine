@@ -1,6 +1,8 @@
 package controller;
 
 import main.GamePanel;
+import main.ImageLoader;
+import main.ItemMananger;
 import map.items.Ore;
 import map.items.Tile;
 
@@ -16,37 +18,24 @@ public class MapController {
     private final int size;
     int tilesPerRow;
 
-    private BufferedImage grasTileImage;
-    private BufferedImage copperTileImage;
-    private BufferedImage stoneTileImage;
-    private BufferedImage coalTileImage;
+    private BufferedImage grasTileImage = ImageLoader.getImage("dirt");
+    private BufferedImage copperTileImage = ImageLoader.getImage("copperOre");
+    private BufferedImage stoneTileImage = ImageLoader.getImage("stoneOre");
+    private BufferedImage coalTileImage = ImageLoader.getImage("coalOre");
 
 
     private ArrayList<Tile> tileArrayList = new ArrayList<>();
 
-    private OreController oreController;
+    private ItemMananger itemMananger;
 
-    public MapController(GamePanel gamePanel, OreController oreController, int size) {
+    public MapController(GamePanel gamePanel, int size) {
         this.size = size*gamePanel.TILESIZE;
         this.gamePanel = gamePanel;
         this.tilesPerRow = size;
 
-        this.oreController = oreController;
+        this.itemMananger = itemMananger;
 
         generateMap(this.size);
-        loadTileImages();
-    }
-
-    private void loadTileImages(){
-        try {
-            grasTileImage = ImageIO.read(getClass().getResourceAsStream("/res/GrasTile.png"));
-            copperTileImage = ImageIO.read(getClass().getResourceAsStream("/res/CopperTile.png"));
-            stoneTileImage = ImageIO.read(getClass().getResourceAsStream("/res/StoneTile.png"));
-            coalTileImage = ImageIO.read(getClass().getResourceAsStream("/res/ColeTile.png"));
-
-        }catch (IOException e){
-            System.out.println("Error loading Images");
-        }
     }
 
     private void generateMap(int size){
@@ -54,15 +43,15 @@ public class MapController {
             for(int y = 0; y < size; y += gamePanel.TILESIZE){
                 Tile tile = new Tile (x,y);
                 tileArrayList.add(tile);
-                tile.setOreOnTile(oreController.noOre);
+                tile.setOreOnTile(itemMananger.noOre);
             }
         }
 
-        generateOreCluster(oreController.copperOre, 2);
-        generateOreCluster(oreController.copperOre, 3);
-        generateOreCluster(oreController.coalOre,5);
-        generateOreCluster(oreController.stoneOre,2);
-        generateOreCluster(oreController.stoneOre,2);
+        generateOreCluster(itemMananger.copperOre, 2);
+        generateOreCluster(itemMananger.copperOre, 3);
+        generateOreCluster(itemMananger.coalOre,5);
+        generateOreCluster(itemMananger.stoneOre,2);
+        generateOreCluster(itemMananger.stoneOre,2);
     }
 
     public void renderMap(Graphics2D g2){
