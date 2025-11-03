@@ -83,11 +83,11 @@ public class PlayerController {
                 try {
                     if (buildingClass == Miner.class) {
                         newBuilding = new Miner(this, "miner", clickedTile.getOreOnTile(),
-                                2000, tileX, tileY, gamePanel, keyHandler.getDirection());
+                                2000, tileX, tileY, gamePanel, Direction.TOP);
                     } else if (buildingClass == Belt.class) {
                         newBuilding = new Belt(tileX, tileY, gamePanel, mapGen, "belt", keyHandler.getDirection());
                     } else if(buildingClass == Furnace.class){
-                        newBuilding = new Furnace(this, "furnace", gamePanel, tileX, tileY, keyHandler.getDirection(), 5000);
+                        newBuilding = new Furnace(this, "furnace", gamePanel, tileX, tileY, Direction.TOP, 5000);
                     }
                     else {
                         System.out.println("Unknown building type!");

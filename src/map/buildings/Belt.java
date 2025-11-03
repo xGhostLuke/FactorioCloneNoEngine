@@ -6,12 +6,16 @@ import map.items.Item;
 import map.items.Tile;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Map;
 
 public class Belt extends TransportationBuilding{
 
     private long lastTransferTime = 0;
     private final long transferDelay = 500;
+
+    private final ArrayList<BeltItem> movingItems = new ArrayList<BeltItem>();
+    private final double speed = 0.05;
 
     public Belt(int x, int y, GamePanel gamePanel, MapController mapController, String name, Direction direction) {
         super(x, y, gamePanel, mapController, name, direction);
@@ -24,6 +28,8 @@ public class Belt extends TransportationBuilding{
 
         long currentTime = System.currentTimeMillis();
 
+        moveBeltItems();
+
         if (currentTime - lastTransferTime >= transferDelay) {
             takeItemFromBuilding();
             giveItemToBuilding();
@@ -34,6 +40,7 @@ public class Belt extends TransportationBuilding{
     @Override
     public void draw(Graphics2D g) {
         g.drawImage(image, xPos, yPos, null);
+        drawItems(g);
     }
 
     @Override
@@ -69,7 +76,11 @@ public class Belt extends TransportationBuilding{
 
     @Override
     public void takeItem(Item item, int amount) {
+        if(!inventory.containsKey(item)) {
+            return;
+        }
 
+        inventory.put(item, inventory.get(item) - amount);
     }
 
     /**
@@ -164,6 +175,7 @@ public class Belt extends TransportationBuilding{
             return;
         }
 
+        movingItems.add(new BeltItem(itemToAddToOwnInv, itemToAddToOwnInv.getName()));
         addItemToInventory(itemToAddToOwnInv, amount);
         buildingRemovingFrom.takeItem(itemToAddToOwnInv, amount);
     }
@@ -192,6 +204,10 @@ public class Belt extends TransportationBuilding{
             return;
         }
 
+        if(buildingAddingTo instanceof TransportationBuilding){
+            return;
+        }
+
         if(inventory.isEmpty()){
             return;
         }
@@ -204,5 +220,36 @@ public class Belt extends TransportationBuilding{
 
         buildingAddingTo.addItemToInventory(item, 1);
         inventory.put(item, inventory.get(item) - 1);
+    }
+
+    private void moveBeltItems(){
+        for (int i = 0; i < movingItems.size(); i++) {
+            BeltItem beltItem = movingItems.get(i);
+            double currenProgress = beltItem.getProgress();
+            beltItem.setProgress(currenProgress + speed);
+
+            if (beltItem.getProgress() >= 1.0) {
+                // Item am Ende angekommen -> weitergeben
+                //giveItemToBuilding(beltItem.getItem());
+                movingItems.remove(i);
+                i--;
+            }
+        }
+    }
+
+    private void drawItems(Graphics2D g){
+        for (BeltItem beltItem : movingItems) {
+            double px = xPos;
+            double py = yPos;
+
+            switch (direction) {
+                case TOP -> py -= beltItem.getProgress() * gamePanel.TILESIZE;
+                case DOWN -> py += beltItem.getProgress() * gamePanel.TILESIZE;
+                case LEFT -> px -= beltItem.getProgress() * gamePanel.TILESIZE;
+                case RIGHT -> px += beltItem.getProgress() * gamePanel.TILESIZE;
+            }
+
+            g.drawImage(beltItem.getImage(), (int) px , (int) py , 16, 16, null);
+        }
     }
 }

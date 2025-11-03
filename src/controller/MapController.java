@@ -18,10 +18,10 @@ public class MapController {
     private final int size;
     int tilesPerRow;
 
-    private BufferedImage grasTileImage = ImageLoader.getImage("dirt");
-    private BufferedImage copperTileImage = ImageLoader.getImage("copperOre");
-    private BufferedImage stoneTileImage = ImageLoader.getImage("stoneOre");
-    private BufferedImage coalTileImage = ImageLoader.getImage("coalOre");
+    private BufferedImage grasTileImage = ImageLoader.getImage("dirt_tile");
+    private BufferedImage copperTileImage = ImageLoader.getImage("copper_tile");
+    private BufferedImage stoneTileImage = ImageLoader.getImage("stone_tile");
+    private BufferedImage coalTileImage = ImageLoader.getImage("coal_tile");
 
 
     private ArrayList<Tile> tileArrayList = new ArrayList<>();

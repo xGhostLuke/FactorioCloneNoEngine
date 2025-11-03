@@ -21,10 +21,16 @@ public class ImageLoader {
      */
     public static void loadAll(){
         try{
-            images.put("dirt", load("/res/GrasTile.png"));
-            images.put("copperOre", load("/res/Coppertile.png"));
-            images.put("stoneOre", load("/res/StoneTile.png"));
-            images.put("coalOre", load("/res/ColeTile.png")); //tf is this spelling
+            images.put("dirt_tile", load("/res/GrasTile.png"));
+            images.put("copper_tile", load("/res/Coppertile.png"));
+            images.put("stone_tile", load("/res/StoneTile.png"));
+            images.put("coal_tile", load("/res/CoalTile.png"));
+
+            images.put("coal_ore", load("/res/coalOre.png"));
+            images.put("copper_ore", load("/res/copperOre.png"));
+            images.put("stone_ore", load("/res/stoneOre.png"));
+
+            images.put("copper_plate", load("/res/copperPlate.png"));
 
             images.put("miner", load("/res/Drill.png"));
             loadRotations("miner");
