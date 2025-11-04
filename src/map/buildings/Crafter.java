@@ -8,7 +8,7 @@ import map.items.Item;
 
 import java.awt.*;
 
-public class Furnace extends Building {
+public class Crafter extends Building {
 
     private long lastTimeCrafted = 0;
     private int craftingSpeed;
@@ -17,11 +17,11 @@ public class Furnace extends Building {
     private Item currentCraftingItem;
 
 
-    public Furnace(PlayerController playerController, String name, GamePanel gamePanel, int x, int y, Direction direction, int craftingSpeed) {
+    public Crafter(PlayerController playerController, String name, GamePanel gamePanel, int x, int y, Direction direction, int craftingSpeed) {
         super(playerController, name, gamePanel, x, y, direction);
         this.craftingSpeed = craftingSpeed;
 
-        setCraftingCost(ItemMananger.stoneOre, 2, ItemMananger.ironOre, 5);
+        setCraftingCost(ItemMananger.copperPlate, 5, ItemMananger.stoneOre, 5);
     }
 
     @Override
@@ -44,44 +44,56 @@ public class Furnace extends Building {
         }
 
         Item itemNeeded1 = null;
-        if(currentCraftingItem.equals(ItemMananger.ironPlate)){
-            itemNeeded1 = ItemMananger.ironOre;
+        Item itemNeeded2 = null;
+        int amountItem1 = 0, amountItem2 = 0;
+        if(currentCraftingItem.equals(ItemMananger.copperWire)){
+            itemNeeded1 = ItemMananger.copperPlate;
+            amountItem1 = 2;
+            itemNeeded2 = null;
         }
-        if(currentCraftingItem.equals(ItemMananger.copperPlate)){
-            itemNeeded1 = ItemMananger.copperOre;
+        if(currentCraftingItem.equals(ItemMananger.smallChip)){
+            itemNeeded1 = ItemMananger.copperWire;
+            amountItem1 = 3;
+            itemNeeded2 = ItemMananger.ironPlate;
+            amountItem2 = 3;
         }
+
+        System.out.println(currentCraftingItem.getName());
 
         if(itemNeeded1 == null){
             return;
         }
 
-        int neededOre = 1;
-        Item coal = ItemMananger.coalOre;
-        int coalConsumption = 5;
         Item itemToCraft = currentCraftingItem;
 
-        //This should be done for every Item the recipe needs
-        if (!(inputInventory.containsKey(itemNeeded1) && inputInventory.containsKey(coal))) {
+        if (!(inputInventory.containsKey(itemNeeded1))) {
             return;
         }
-        //same here
-        if (!canCraft(itemNeeded1, neededOre, coal, 1)){
+
+        if(itemNeeded2 != null && !(inputInventory.containsKey(itemNeeded2))){
+            System.out.println("WEIRD");
+            return;
+        }
+
+        if (!canCraft(itemNeeded1, amountItem1, itemNeeded2, amountItem2)){
+            System.out.println("NOT ENOUGH ReS");
             return;
         }
 
         if (now - lastTimeCrafted >= craftingSpeed) {
             craftedItems++;
-            inputInventory.put(itemNeeded1, inputInventory.get(itemNeeded1) - neededOre);
-
-            if (craftedItems != 0 && (craftedItems % coalConsumption == 0)) {
-                inputInventory.put(coal, inputInventory.get(coal) - 1);
+            inputInventory.put(itemNeeded1, inputInventory.get(itemNeeded1) - amountItem1);
+            if(itemNeeded2 != null){
+                inputInventory.put(itemNeeded2, inputInventory.get(itemNeeded2) - amountItem2);
             }
+
 
             if(!outputInventory.containsKey(itemToCraft)){
                 outputInventory.put(itemToCraft, 0);
             }
 
             outputInventory.put(itemToCraft, outputInventory.get(itemToCraft) + 1);
+            System.out.println("crafted: " + itemToCraft.getName());
             lastTimeCrafted = now;
         }
     }
@@ -95,9 +107,14 @@ public class Furnace extends Building {
      * @return boolean
      */
     private boolean canCraft(Item input1, int amount1, Item input2, int amount2) {
-        return inputInventory.getOrDefault(input1, 0) >= amount1 &&
-                inputInventory.getOrDefault(input2, 0) >= amount2;
+        if(input2 != null) {
+            return inputInventory.getOrDefault(input1, 0) >= amount1 &&
+                    inputInventory.getOrDefault(input2, 0) >= amount2;
+        }
+
+        return inputInventory.getOrDefault(input1, 0) >= amount1;
     }
+
 
 
     /**
@@ -122,22 +139,23 @@ public class Furnace extends Building {
      * copper plates until no copper ore is in the furnace
      */
     public void checkWhatItemToCraft(){
-        if (currentCraftingItem != null) {
-            return;
-        }
+        currentCraftingItem = null;
 
-        if(inputInventory.containsKey(ItemMananger.copperOre)){
-            if(inputInventory.get(ItemMananger.copperOre) < 1){
+        if(inputInventory.containsKey(ItemMananger.copperWire) && inputInventory.containsKey(ItemMananger.ironPlate)){
+            if(inputInventory.get(ItemMananger.copperWire) < 1){
                 return;
             }
-            currentCraftingItem = ItemMananger.copperPlate;
-        }
-
-        if(inputInventory.containsKey(ItemMananger.ironOre)){
-            if(inputInventory.get(ItemMananger.ironOre) < 1){
+            if(inputInventory.get(ItemMananger.ironPlate) < 1){
                 return;
             }
-            currentCraftingItem = ItemMananger.ironPlate;
+            currentCraftingItem = ItemMananger.smallChip;
+        }
+
+        if(inputInventory.containsKey(ItemMananger.copperPlate)){
+            if(inputInventory.get(ItemMananger.copperPlate) < 1){
+                return;
+            }
+            currentCraftingItem = ItemMananger.copperWire;
         }
     }
 }

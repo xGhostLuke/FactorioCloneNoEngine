@@ -3,6 +3,8 @@ package controller;
 import map.items.Item;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferDouble;
 import java.util.Map;
 
 public class InventoryController {
@@ -11,12 +13,16 @@ public class InventoryController {
     private int xPos = 50;
     private int yPos = 50;
     private int startYPos = yPos;
-    private int yMargin = 20;
+    private int yMargin = 25;
+    private int xMargin = 30;
     private final int size = 20;
 
+    public BufferedImage[] imageArray;
 
     public InventoryController(PlayerController playerController) {
         this.playerController = playerController;
+
+        imageArray = new BufferedImage[playerController.inventory.size()];
     }
 
     public void paintInventory(Graphics2D g2){
@@ -28,9 +34,10 @@ public class InventoryController {
         g2.setFont(new Font("Arial", Font.BOLD, size));
 
         for (Map.Entry<Item, Integer> entry : playerController.inventory.entrySet()) {
-            invetoryString = entry.getKey().getName() + ": " + entry.getValue() + " \n";
+            g2.drawImage(entry.getKey().getImage(), xPos, yPos, null);
+            invetoryString = entry.getValue() + " \n";
             yPos += yMargin;
-            g2.drawString(invetoryString, xPos, yPos);
+            g2.drawString(invetoryString, xPos+xMargin, yPos);
         }
     }
 

@@ -22,15 +22,22 @@ public class ImageLoader {
     public static void loadAll(){
         try{
             images.put("dirt_tile", load("/res/GrasTile.png"));
-            images.put("copper_tile", load("/res/Coppertile.png"));
+            images.put("copper_tile", load("/res/CopperTile.png"));
             images.put("stone_tile", load("/res/StoneTile.png"));
             images.put("coal_tile", load("/res/CoalTile.png"));
+            images.put("iron_tile", load("/res/IronTile.png"));
 
             images.put("coal_ore", load("/res/coalOre.png"));
             images.put("copper_ore", load("/res/copperOre.png"));
             images.put("stone_ore", load("/res/stoneOre.png"));
+            images.put("iron_ore", load("/res/ironOre.png"));
 
             images.put("copper_plate", load("/res/copperPlate.png"));
+            images.put("iron_plate", load("/res/ironPlate.png"));
+
+            images.put("copper_wire", load("/res/copperWire.png"));
+
+            images.put("small_chip", load("/res/smallChip.png"));
 
             images.put("miner", load("/res/Drill.png"));
             loadRotations("miner");
@@ -40,6 +47,9 @@ public class ImageLoader {
 
             images.put("furnace", load("/res/Furnace.png"));
             loadRotations("furnace");
+
+            images.put("crafter", load("/res/Crafter.png")); //just a placeholder
+            loadRotations("crafter");
 
         }catch (IOException e){
             System.out.println("EEEE");

@@ -22,7 +22,7 @@ public class MapController {
     private BufferedImage copperTileImage = ImageLoader.getImage("copper_tile");
     private BufferedImage stoneTileImage = ImageLoader.getImage("stone_tile");
     private BufferedImage coalTileImage = ImageLoader.getImage("coal_tile");
-
+    private BufferedImage ironTileImage = ImageLoader.getImage("iron_tile");
 
     private ArrayList<Tile> tileArrayList = new ArrayList<>();
 
@@ -47,11 +47,13 @@ public class MapController {
             }
         }
 
-        generateOreCluster(itemMananger.copperOre, 2);
-        generateOreCluster(itemMananger.copperOre, 3);
-        generateOreCluster(itemMananger.coalOre,5);
-        generateOreCluster(itemMananger.stoneOre,2);
-        generateOreCluster(itemMananger.stoneOre,2);
+        generateOreCluster(ItemMananger.copperOre, 2);
+        generateOreCluster(ItemMananger.copperOre, 3);
+        generateOreCluster(ItemMananger.coalOre,5);
+        generateOreCluster(ItemMananger.stoneOre,2);
+        generateOreCluster(ItemMananger.stoneOre,2);
+        generateOreCluster(ItemMananger.ironOre,2);
+        generateOreCluster(ItemMananger.ironOre,2);
     }
 
     public void renderMap(Graphics2D g2){
@@ -77,6 +79,9 @@ public class MapController {
                     break;
                 case COAL:
                     g2.drawImage(coalTileImage, x, y, null);
+                    break;
+                case IRON:
+                    g2.drawImage(ironTileImage, x, y, null);
                     break;
                 default:
                     break;

@@ -74,10 +74,12 @@ public class UIController {
             BufferedImage minerImg = ImageLoader.getImage("miner");
             BufferedImage beltImg = ImageLoader.getImage("belt_top");
             BufferedImage furnanceImage = ImageLoader.getImage("furnace");
+            BufferedImage crafterImage = ImageLoader.getImage("crafter");
 
             buildingButtons.add(new BuildingButton("miner", 50, 850, 64, minerImg, Miner.class));
             buildingButtons.add(new BuildingButton("belt", 130, 850, 64, beltImg, Belt.class));
             buildingButtons.add(new BuildingButton("furnace", 210, 850, 64, furnanceImage, Furnace.class));
+            buildingButtons.add(new BuildingButton("crafter", 290, 850, 64, crafterImage, Crafter.class));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -85,7 +87,7 @@ public class UIController {
     }
 
     public static void update(MouseHandler mouse) {
-        if (!(mouse.mouseX > 30 && mouse.mouseX < 280 &&
+        if (!(mouse.mouseX > 30 && mouse.mouseX < 380 &&
                 mouse.mouseY > 830 && mouse.mouseY < 930)) {
             return;
         }
@@ -106,7 +108,7 @@ public class UIController {
     public static void drawBuildingMenu(Graphics2D g2) {
         g2.setFont(new Font("Arial", Font.BOLD, 14));
         g2.setColor(new Color(0, 0, 0, 150));
-        g2.fillRoundRect(30, 830, 300, 100, 15, 15);
+        g2.fillRoundRect(30, 830, 400, 100, 15, 15);
 
         for (BuildingButton btn : buildingButtons) {
             // Rahmen

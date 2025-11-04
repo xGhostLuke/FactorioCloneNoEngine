@@ -35,6 +35,9 @@ public class PlayerController {
         inventory.put(ItemMananger.stoneOre, 1000);
         inventory.put(ItemMananger.copperOre, 1000);
         inventory.put(ItemMananger.ironOre, 1000);
+        inventory.put(ItemMananger.copperPlate, 1000);
+        inventory.put(ItemMananger.smallChip, 0);
+        inventory.put(ItemMananger.copperWire, 0);
     }
 
     public void update(){
@@ -50,7 +53,7 @@ public class PlayerController {
         }
         inventory.put(item, amount);
 
-        System.out.println(item.getType().toString() + " added to the inventory");
+        //System.out.println(item.getType().toString() + " added to the inventory");
         System.out.println(inventory.get(item) + " now in inventory");
     }
 
@@ -88,6 +91,8 @@ public class PlayerController {
                         newBuilding = new Belt(tileX, tileY, gamePanel, mapGen, "belt", keyHandler.getDirection());
                     } else if(buildingClass == Furnace.class){
                         newBuilding = new Furnace(this, "furnace", gamePanel, tileX, tileY, Direction.TOP, 5000);
+                    } else if(buildingClass == Crafter.class) {
+                        newBuilding = new Crafter(this, "crafter", gamePanel, tileX, tileY, Direction.TOP, 5000);
                     }
                     else {
                         System.out.println("Unknown building type!");
@@ -130,7 +135,19 @@ public class PlayerController {
                 if(activeInventory == miner){
                     miner.takeOutput();
                 }
-                System.out.println("Opened Miner Inventory");
+                System.out.println("Collected Miner Output");
+            }
+            if(clickedTile.getBuildingOnTile() instanceof Furnace furnace){
+                if(activeInventory == furnace){
+                    furnace.takeOutput();
+                }
+                System.out.println("Collected Furnace Output");
+            }
+            if(clickedTile.getBuildingOnTile() instanceof Crafter crafter){
+                if(activeInventory == crafter){
+                    crafter.takeOutput();
+                }
+                System.out.println("Collected Crafter Output");
             }
         }
 
@@ -141,7 +158,11 @@ public class PlayerController {
             }
             if(clickedTile.getBuildingOnTile() instanceof Furnace furnace){
                 activeInventory = furnace;
-                System.out.println("Opened Miner Inventory");
+                System.out.println("Opened Furnace Inventory");
+            }
+            if(clickedTile.getBuildingOnTile() instanceof Crafter crafter){
+                activeInventory = crafter;
+                System.out.println("Opened Crafter Inventory");
             }
             if(clickedTile.getBuildingOnTile() == null){
                 activeInventory = null;
