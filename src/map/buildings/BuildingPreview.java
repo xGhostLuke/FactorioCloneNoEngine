@@ -26,8 +26,12 @@ public class BuildingPreview {
                 return;
             }
 
-            int tileX = (mouseHandler.mouseX / gamePanel.TILESIZE) * gamePanel.TILESIZE;
-            int tileY = (mouseHandler.mouseY / gamePanel.TILESIZE) * gamePanel.TILESIZE;
+            int tileX = (mouseHandler.mouseX + gamePanel.cameraX) / gamePanel.TILESIZE;
+            int tileY = (mouseHandler.mouseY + gamePanel.cameraY) / gamePanel.TILESIZE;
+
+            int drawX = tileX * gamePanel.TILESIZE - gamePanel.cameraX;
+            int drawY = tileY * gamePanel.TILESIZE - gamePanel.cameraY;
+
 
             BufferedImage previewImage = UIController.getSelectedBuildingImage(keyHandler.getDirection());
             if (previewImage != null) {
@@ -35,7 +39,7 @@ public class BuildingPreview {
                 AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f);
                 g2.setComposite(ac);
 
-                g2.drawImage(previewImage, tileX, tileY, gamePanel.TILESIZE, gamePanel.TILESIZE, null);
+                g2.drawImage(previewImage, drawX, drawY, gamePanel.TILESIZE, gamePanel.TILESIZE, null);
 
                 // Transparenz zurücksetzen
                 g2.setComposite(AlphaComposite.SrcOver);

@@ -26,6 +26,11 @@ public class PlayerController {
 
     public Building activeInventory = null;
 
+    int tileX;
+    int tileY;
+
+    Tile clickedTile;
+
     public PlayerController(GamePanel gamePanel, KeyHandler keyHandler, MouseHandler mouseHandler, MapController mapGen) {
         this.gamePanel = gamePanel;
         this.keyHandler = keyHandler;
@@ -39,12 +44,18 @@ public class PlayerController {
         inventory.put(ItemMananger.copperPlate, 1000);
         inventory.put(ItemMananger.smallChip, 0);
         inventory.put(ItemMananger.copperWire, 0);
+
     }
 
     public void update(){
         playerMining();
         playerBuilding();
         removingBuilding();
+
+        tileX = (mouseHandler.mouseX + gamePanel.cameraX) / gamePanel.TILESIZE;
+        tileY = (mouseHandler.mouseY + gamePanel.cameraY) / gamePanel.TILESIZE;
+
+        clickedTile = mapGen.getTileDraw(tileX, tileY);
     }
 
     public void addItemToInventory(Item item, int amount){
@@ -60,13 +71,9 @@ public class PlayerController {
     }
 
     private void playerBuilding(){
-        int tileX = mouseHandler.mouseX / gamePanel.TILESIZE;
-        int tileY = mouseHandler.mouseY / gamePanel.TILESIZE;
-
-        Tile clickedTile = mapGen.getTile(tileX, tileY);
 
         if (keyHandler.inBuildMode) {
-            if (mouseHandler.leftClicked) {
+            if (mouseHandler.leftPressed) {
                 mouseHandler.leftClicked = false;
 
                 Class<? extends Placeable> buildingClass = UIController.getSelectedBuilding();
@@ -75,11 +82,11 @@ public class PlayerController {
                     return;
                 }
 
-                clickedTile = mapGen.getTile(tileX, tileY);
                 if (clickedTile == null) return;
 
                 if (clickedTile.getBuildingOnTile() != null) {
                     System.out.println("Already Building on Tile!");
+                    System.out.println(clickedTile.getX() + "   "  +  clickedTile.getY());
                     return;
                 }
 
@@ -195,10 +202,10 @@ public class PlayerController {
     }
 
     private void playerMining(){
-        int tileX = mouseHandler.mouseX / gamePanel.TILESIZE;
-        int tileY = mouseHandler.mouseY / gamePanel.TILESIZE;
 
-        Tile clickedTile = mapGen.getTile(tileX, tileY);
+        if(clickedTile == null){
+            return;
+        }
 
         if(clickedTile.getOreOnTile().getType().equals(OreType.NONE)){
             return;
@@ -222,12 +229,8 @@ public class PlayerController {
     }
 
     private void removingBuilding(){
-        int tileX = mouseHandler.mouseX / gamePanel.TILESIZE;
-        int tileY = mouseHandler.mouseY / gamePanel.TILESIZE;
 
-        Tile clickedTile = mapGen.getTile(tileX, tileY);
-
-        if (clickedTile.getBuildingOnTile() == null){
+        if (clickedTile == null){
             return;
         }
 

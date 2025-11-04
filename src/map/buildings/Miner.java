@@ -1,6 +1,5 @@
 package map.buildings;
 
-import main.ItemMananger;
 import controller.PlayerController;
 import main.GamePanel;
 import map.items.Item;
@@ -65,11 +64,6 @@ public class Miner extends Building {
             }
             lastMineTime = now;
         }
-    }
-
-    @Override
-    public void draw(Graphics2D g){
-        g.drawImage(image, xPos, yPos, null);
     }
 
     //if the miner isnt placed on any ore you cant take the output if it got some through transportation

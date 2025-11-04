@@ -38,8 +38,8 @@ public class Belt extends TransportationBuilding{
     }
 
     @Override
-    public void draw(Graphics2D g) {
-        g.drawImage(image, xPos, yPos, null);
+    public void draw(Graphics2D g, int cameraX, int cameraY) {
+        g.drawImage(image, xPos - cameraX, yPos - cameraY, null);
         drawItems(g);
     }
 
@@ -109,7 +109,7 @@ public class Belt extends TransportationBuilding{
                 break;
         }
 
-        Tile tile = mapController.getTile(tileX, tileY);
+        Tile tile = mapController.getTileDraw(tileX, tileY);
         if (tile == null) return;
 
         buildingAddingTo = tile.getBuildingOnTile();
@@ -141,7 +141,7 @@ public class Belt extends TransportationBuilding{
                 break;
         }
 
-        Tile tile = mapController.getTile(tileX, tileY);
+        Tile tile = mapController.getTileDraw(tileX, tileY);
         if (tile == null) return;
 
         buildingRemovingFrom = tile.getBuildingOnTile();
@@ -239,8 +239,8 @@ public class Belt extends TransportationBuilding{
 
     private void drawItems(Graphics2D g){
         for (BeltItem beltItem : movingItems) {
-            double px = xPos;
-            double py = yPos;
+            double px = xPos - gamePanel.cameraX;
+            double py = yPos - gamePanel.cameraY;
 
             switch (direction) {
                 case TOP -> py -= beltItem.getProgress() * gamePanel.TILESIZE;

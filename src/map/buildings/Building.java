@@ -1,6 +1,5 @@
 package map.buildings;
 
-import main.ItemMananger;
 import controller.PlayerController;
 import main.GamePanel;
 import map.items.Item;
@@ -55,8 +54,8 @@ public abstract class Building extends Placeable {
     }
 
     @Override
-    public void draw(Graphics2D g){
-        g.drawImage(image, xPos, yPos, null);
+    public void draw(Graphics2D g, int cameraX, int cameraY){
+        g.drawImage(image, xPos - cameraX, yPos - cameraY, null);
     }
 
     @Override

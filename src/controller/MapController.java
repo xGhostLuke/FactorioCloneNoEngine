@@ -6,16 +6,14 @@ import main.ItemMananger;
 import map.items.Ore;
 import map.items.Tile;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class MapController {
 
     private final GamePanel gamePanel;
-    private final int size;
+    public final int size;
     int tilesPerRow;
 
     private BufferedImage grasTileImage = ImageLoader.getImage("dirt_tile");
@@ -47,44 +45,62 @@ public class MapController {
             }
         }
 
-        generateOreCluster(ItemMananger.copperOre, 2);
-        generateOreCluster(ItemMananger.copperOre, 3);
-        generateOreCluster(ItemMananger.coalOre,5);
-        generateOreCluster(ItemMananger.stoneOre,2);
-        generateOreCluster(ItemMananger.stoneOre,2);
-        generateOreCluster(ItemMananger.ironOre,2);
-        generateOreCluster(ItemMananger.ironOre,2);
+
+        for (int i = 0; i < (Math.random() * 10000) + 1000; i++){
+            if (i%4==0){
+                generateOreCluster(ItemMananger.copperOre, 2);
+            }
+            if (i%6==0){
+                generateOreCluster(ItemMananger.coalOre,5);
+            }
+            if (i%6==0){
+                generateOreCluster(ItemMananger.stoneOre,2);
+            }
+            if (i%8==0){
+                generateOreCluster(ItemMananger.ironOre,2);
+            }
+        }
     }
 
-    public void renderMap(Graphics2D g2){
+    public void renderMap(Graphics2D g2, int xCam, int yCam){
         g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
 
 
-        for (Tile tile : tileArrayList){
+        int startCol = xCam / gamePanel.TILESIZE;
+        int startRow = yCam / gamePanel.TILESIZE;
+        int endCol = (xCam + gamePanel.screenWidth) / gamePanel.TILESIZE;
+        int endRow = (yCam + gamePanel.screenHeight) / gamePanel.TILESIZE;
 
-            Ore ore = tile.getOreOnTile();
-            int x = tile.getX();
-            int y = tile.getY();
+        //This should only render visible tiles now
+        for (int row = startRow; row <= endRow; row++) {
+            for (int col = startCol; col <= endCol; col++) {
 
-            switch (ore.getType()){
-                case NONE:
-                    g2.drawImage(grasTileImage, x, y, null);
-                    break;
-                case COPPER:
-                    g2.drawImage(copperTileImage, x, y, null);
-                    break;
+                Tile tile = getTileDraw(col, row);
+                if (tile == null) continue;
+                int x = tile.getX() - xCam;
+                int y = tile.getY() - yCam;
+                Ore ore = tile.getOreOnTile();
+
+                switch (ore.getType()){
+                    case NONE:
+                        g2.drawImage(grasTileImage, x, y, null);
+                        break;
+                    case COPPER:
+                        g2.drawImage(copperTileImage, x, y, null);
+                        break;
                     case STONE:
                         g2.drawImage(stoneTileImage, x, y, null);
-                    break;
-                case COAL:
-                    g2.drawImage(coalTileImage, x, y, null);
-                    break;
-                case IRON:
-                    g2.drawImage(ironTileImage, x, y, null);
-                    break;
-                default:
-                    break;
+                        break;
+                    case COAL:
+                        g2.drawImage(coalTileImage, x, y, null);
+                        break;
+                    case IRON:
+                        g2.drawImage(ironTileImage, x, y, null);
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }
@@ -105,13 +121,27 @@ public class MapController {
                     continue;
                 }
 
-                Tile tile = getTile(tileX, tileY);
+                Tile tile = getTileDraw(tileX, tileY);
                 tile.setOreOnTile(ore);
             }
         }
+        System.out.println("Generated Cluster of " + ore.getName());
     }
 
-    public Tile  getTile(int x, int y){
+    public Tile getTileCoords(int x, int y){
+        //System.out.println("x " + x + "     " +y );
+        int dx = x / gamePanel.TILESIZE;
+        int dy = y / gamePanel.TILESIZE;
+        try{
+            return tileArrayList.get(dx * tilesPerRow + dy);
+        }catch (IndexOutOfBoundsException e){
+            System.out.println("Tile not in Arraybounds");
+        }
+        return null;
+    }
+
+    public Tile getTileDraw(int x, int y){
+        //System.out.println("x " + x + "     " +y );
         try{
             return tileArrayList.get(x * tilesPerRow + y);
         }catch (IndexOutOfBoundsException e){

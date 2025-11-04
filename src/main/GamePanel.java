@@ -17,10 +17,12 @@ public class GamePanel extends JPanel implements Runnable {
     final int SCLAE = 1;
     public final int TILESIZE = ORIGINALESIZE * SCLAE;
 
-    final int maxScreenCol = 32;
-    final int maxScreenRow = 32;
-    final int screenWidth = TILESIZE * maxScreenCol;
-    final int screenHeight = TILESIZE * maxScreenRow;
+    final int maxScreenCol = 1920 / TILESIZE;
+    final int maxScreenRow = 1080 / TILESIZE;
+    public final int screenWidth = TILESIZE * maxScreenCol;
+    public final int screenHeight = TILESIZE * maxScreenRow;
+
+    public int cameraX, cameraY;
 
     int fps = 60;
 
@@ -28,7 +30,7 @@ public class GamePanel extends JPanel implements Runnable {
     private final KeyHandler keyHandler;
 
 
-    private final MapController mapGen;
+    public final MapController mapGen;
 
     Thread gameThread;
 
@@ -54,7 +56,7 @@ public class GamePanel extends JPanel implements Runnable {
         ImageLoader.loadAll();
         UIController.initMenu();
 
-        mapGen = new MapController(this, 32);
+        mapGen = new MapController(this, 1000);
 
         player = new Player(this, keyHandler);
         playerController = new PlayerController(this, keyHandler, mouseHandler, mapGen);
@@ -94,7 +96,6 @@ public class GamePanel extends JPanel implements Runnable {
             }catch (InterruptedException e){
                 System.out.println("Error sleeping Thread");
             }
-
         }
     }
 
@@ -104,7 +105,8 @@ public class GamePanel extends JPanel implements Runnable {
         playerController.update();
         player.update();
 
-
+        cameraX = player.getX() - screenWidth / 2;
+        cameraY = player.getY() - screenHeight / 2;
 
         for (Placeable building : buildingList){
             building.update();
@@ -116,11 +118,14 @@ public class GamePanel extends JPanel implements Runnable {
 
         Graphics2D g2 = (Graphics2D) g;
 
-        mapGen.renderMap(g2);
-        inventoryController.paintInventory(g2);
+        mapGen.renderMap(g2, cameraX, cameraY);
+
+        if(keyHandler.inBuildMode){
+            inventoryController.paintInventory(g2);
+        }
 
         for (Placeable building : buildingList){
-            building.draw(g2);
+            building.draw(g2, cameraX , cameraY );
         }
 
         player.draw(g2);

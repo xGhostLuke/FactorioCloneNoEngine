@@ -19,8 +19,8 @@ public class Player extends Entity {
 
     public void setDefaultValues(){
 
-        x = 100;
-        y = 100;
+        x = gamePanel.mapGen.size / 2;
+        y = gamePanel.mapGen.size / 2;
         speed = 4;
     }
 
@@ -37,12 +37,16 @@ public class Player extends Entity {
         else if(keyHandler.rightPressed){
             x += speed;
         }
+
+        //System.out.println("x " + x + "     " +y );
     }
 
     public void draw(Graphics2D g2){
+        int screenX = x - gamePanel.cameraX;
+        int screenY = y - gamePanel.cameraY;
 
         g2.setColor(Color.white);
-        g2.fillRect(x, y, gamePanel.TILESIZE, gamePanel.TILESIZE);
+        g2.fillRect(screenX, screenY, gamePanel.TILESIZE, gamePanel.TILESIZE);
     }
 
 

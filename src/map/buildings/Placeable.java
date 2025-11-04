@@ -38,7 +38,7 @@ public abstract  class Placeable {
     }
 
     public abstract void update();
-    public abstract void draw(Graphics2D g);
+    public abstract void draw(Graphics2D g, int cameraX, int cameraY);
 
     public abstract void setCraftingCost(Item item, int cost, Item item2, int cost2);
     public abstract Map<Item, Integer> getCraftingCost();
