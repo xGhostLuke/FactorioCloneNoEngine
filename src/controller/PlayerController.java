@@ -6,6 +6,7 @@ import main.MouseHandler;
 import main.ItemMananger;
 import map.buildings.*;
 import map.items.Item;
+import map.items.OreType;
 import map.items.Tile;
 
 import java.util.HashMap;
@@ -43,6 +44,7 @@ public class PlayerController {
     public void update(){
         playerMining();
         playerBuilding();
+        removingBuilding();
     }
 
     public void addItemToInventory(Item item, int amount){
@@ -198,6 +200,10 @@ public class PlayerController {
 
         Tile clickedTile = mapGen.getTile(tileX, tileY);
 
+        if(clickedTile.getOreOnTile().getType().equals(OreType.NONE)){
+            return;
+        }
+
         if(mouseHandler.leftPressed){
             mouseHandler.leftClicked = false;
             if(mousePressedStartTime == 0){
@@ -207,6 +213,35 @@ public class PlayerController {
 
                 if(heldTime >= playerMiningDuration){
                     addItemToInventory(clickedTile.getOreOnTile(), 1);
+                    mousePressedStartTime = 0;
+                }
+            }
+        } else {
+            mousePressedStartTime = 0;
+        }
+    }
+
+    private void removingBuilding(){
+        int tileX = mouseHandler.mouseX / gamePanel.TILESIZE;
+        int tileY = mouseHandler.mouseY / gamePanel.TILESIZE;
+
+        Tile clickedTile = mapGen.getTile(tileX, tileY);
+
+        if (clickedTile.getBuildingOnTile() == null){
+            return;
+        }
+
+        if(mouseHandler.leftPressed){
+            mouseHandler.leftClicked = false;
+            if(mousePressedStartTime == 0){
+                mousePressedStartTime = System.currentTimeMillis();
+            } else {
+                long heldTime = System.currentTimeMillis() - mousePressedStartTime;
+
+                if(heldTime >= playerMiningDuration){
+                    gamePanel.buildingList.remove(clickedTile.getBuildingOnTile());
+                    clickedTile.setBuildingOnTile(null);
+                    System.out.println("removed Building");
                     mousePressedStartTime = 0;
                 }
             }
