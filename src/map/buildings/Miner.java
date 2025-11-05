@@ -2,11 +2,13 @@ package map.buildings;
 
 import controller.PlayerController;
 import main.GamePanel;
+import main.ImageLoader;
 import map.items.Item;
 import map.items.Ore;
 import map.items.OreType;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class Miner extends Building {
 
@@ -18,6 +20,12 @@ public class Miner extends Building {
     int fuelConsumption = 3;
 
 
+    //Mining Animation
+    private boolean isMining = false;
+    private int miningFrame = 0;
+    private long lastFrameTime = 0;
+    private long frameDelay = 100; // Zeit zwischen Frames in ms
+    private int totalFrames = 10;
 
     public Miner(PlayerController playerController, String name, Ore placedOnOre, int mingingSpeed, int xPos, int yPos, GamePanel gamePanel, Direction direction) {
         super(playerController, name, gamePanel, xPos, yPos, direction);
@@ -40,7 +48,7 @@ public class Miner extends Building {
         if (inputInventory.getOrDefault(itemMananger.coalOre, 0) <= 0) {
             return;
         }
-
+        isMining = true;
         if (now - lastMineTime >= miningSpeed) {
             OreType type = placedOnOre.getType();
             Ore outputOre = switch (type) {
@@ -52,6 +60,7 @@ public class Miner extends Building {
             };
 
             if (outputOre != null) {
+
                 System.out.println("Miner mined Ore");
                 outputInventory.put(outputOre, outputInventory.getOrDefault(outputOre, 0) + miningAmount);
                 oresMined++;
@@ -62,6 +71,7 @@ public class Miner extends Building {
                     inputInventory.put(itemMananger.coalOre, Math.max(coalLeft, 0));
                 }
             }
+            isMining = false;
             lastMineTime = now;
         }
     }
@@ -78,5 +88,30 @@ public class Miner extends Building {
         }
 
         return outputInventory.entrySet().iterator().next().getKey();
+    }
+
+
+    @Override
+    public void draw(Graphics2D g, int cameraX, int cameraY){
+        if(!isMining){
+            g.drawImage(image, xPos - cameraX, yPos - cameraY, null);
+            return;
+        }
+        playAnimationMining(g, cameraX, cameraY);
+    }
+
+    private void playAnimationMining(Graphics2D g, int cameraX, int cameraY) {
+        long now = System.currentTimeMillis();
+
+        if (now - lastFrameTime >= frameDelay) {
+            miningFrame++;
+            if (miningFrame >= totalFrames) {
+                miningFrame = 1;
+            }
+            lastFrameTime = now;
+        }
+
+        BufferedImage frame = ImageLoader.getImage("minerMining" + miningFrame);
+        g.drawImage(frame, xPos - cameraX, yPos - cameraY, null);
     }
 }

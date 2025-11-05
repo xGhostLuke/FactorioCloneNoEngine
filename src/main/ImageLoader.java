@@ -39,8 +39,19 @@ public class ImageLoader {
 
             images.put("small_chip", load("/res/smallChip.png"));
 
-            images.put("miner", load("/res/Drill.png"));
+            images.put("miner", load("/res/drill/Drill.png"));
             loadRotations("miner");
+
+            images.put("minerMining1", load("/res/drill/DrillMininAnimation1.png"));
+            images.put("minerMining2", load("/res/drill/DrillMininAnimation2.png"));
+            images.put("minerMining3", load("/res/drill/DrillMininAnimation3.png"));
+            images.put("minerMining4", load("/res/drill/DrillMininAnimation4.png"));
+            images.put("minerMining5", load("/res/drill/DrillMininAnimation5.png"));
+            images.put("minerMining6", load("/res/drill/DrillMininAnimation6.png"));
+            images.put("minerMining7", load("/res/drill/DrillMininAnimation7.png"));
+            images.put("minerMining8", load("/res/drill/DrillMininAnimation8.png"));
+            images.put("minerMining9", load("/res/drill/DrillMininAnimation9.png"));
+            images.put("minerMining10", load("/res/drill/DrillMininAnimation10.png"));
 
             images.put("belt", load("/res/belt_top.png"));
             loadRotations("belt");

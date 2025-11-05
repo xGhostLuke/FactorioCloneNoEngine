@@ -59,9 +59,13 @@ public class PlayerController {
     }
 
     public void addItemToInventory(Item item, int amount){
+        if(item == null){
+            return;
+        }
+
         if(inventory.containsKey(item)){
             inventory.put(item, inventory.get(item) + amount);
-            System.out.println(item.getType().toString() + " increased by " + amount);
+            System.out.println(item.getName() + " increased by " + amount);
             return;
         }
         inventory.put(item, amount);
